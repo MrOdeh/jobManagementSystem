@@ -36,4 +36,9 @@ public class JobTypeController {
     public void deleteById(String id){
         jobTypeService.deleteById(id);
     }
+
+    @PutMapping("/")
+    public JobType update(@RequestBody JobType job){
+        return jobTypeService.save(job);
+    }
 }

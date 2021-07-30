@@ -17,13 +17,9 @@ public class JobTypeServiceImpl implements JobTypeService {
 
     private final JobTypeRepository jobTypeRepository;
 
+    @Deprecated
     @Override
     public JobType findById(String id) {
-
-        if(id == null || "".equals(id)){ // in real world scenarios i would add custom exception message
-            log.error("invlaid User Input");
-            return new JobType();
-        }
         Optional<JobType> byId = jobTypeRepository.findById(UUID.fromString(id));
 
         if(!byId.isPresent()){
@@ -37,6 +33,9 @@ public class JobTypeServiceImpl implements JobTypeService {
 
     @Override
     public JobType findByJobName(String name) {
+        if(name == null || "".equals(name)){
+            throw new RuntimeException("invalid input");
+        }
         Optional<JobType> byId = jobTypeRepository.findJobTypeByJobName(name);
 
         if(!byId.isPresent()){
@@ -50,6 +49,15 @@ public class JobTypeServiceImpl implements JobTypeService {
 
     @Override
     public JobType save(JobType job) {
+        return jobTypeRepository.save(job);
+    }
+
+    @Override
+    public JobType update(JobType job) {
+        if(job == null){
+            throw new RuntimeException("invalid input");
+        }
+
         return jobTypeRepository.save(job);
     }
 

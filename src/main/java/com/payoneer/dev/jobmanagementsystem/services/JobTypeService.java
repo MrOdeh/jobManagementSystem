@@ -11,6 +11,10 @@ public interface JobTypeService{
 
     JobType save(JobType job);
 
+    JobType update(JobType job);
+
     void deleteById(String id);
+
+
 
 }
