@@ -1,5 +1,6 @@
-package com.payoneer.dev.jobmanagementsystem;
+package com.payoneer.dev.jobmanagementsystem.config;
 
+import com.payoneer.dev.jobmanagementsystem.JobManagementSystemApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 // new defualt config
