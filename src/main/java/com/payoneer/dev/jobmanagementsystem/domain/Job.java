@@ -1,6 +1,10 @@
 package com.payoneer.dev.jobmanagementsystem.domain;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.payoneer.dev.jobmanagementsystem.enumeration.JobPriority;
 import com.payoneer.dev.jobmanagementsystem.enumeration.JobStatus;
 import lombok.*;
@@ -51,6 +55,8 @@ public class Job implements Serializable {
     @Column(name = "job_status")
     private JobStatus jobStatus;
 
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @Column(name = "job_execution_time")
     private LocalDateTime jobExecutionTime;
 

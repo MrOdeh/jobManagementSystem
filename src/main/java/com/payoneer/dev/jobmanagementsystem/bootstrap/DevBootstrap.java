@@ -2,12 +2,10 @@ package com.payoneer.dev.jobmanagementsystem.bootstrap;
 
 import com.payoneer.dev.jobmanagementsystem.domain.EmailJob;
 import com.payoneer.dev.jobmanagementsystem.domain.Job;
-import com.payoneer.dev.jobmanagementsystem.domain.JobType;
 import com.payoneer.dev.jobmanagementsystem.domain.ReminderJob;
 import com.payoneer.dev.jobmanagementsystem.enumeration.JobPriority;
 import com.payoneer.dev.jobmanagementsystem.repositories.EmailJobRepository;
 import com.payoneer.dev.jobmanagementsystem.repositories.JobRepository;
-import com.payoneer.dev.jobmanagementsystem.repositories.JobTypeRepository;
 import com.payoneer.dev.jobmanagementsystem.repositories.ReminderJobRepository;
 import com.payoneer.dev.jobmanagementsystem.services.EmailJobService;
 import com.payoneer.dev.jobmanagementsystem.services.JobService;
@@ -24,7 +22,6 @@ import java.util.UUID;
 @Component
 public class DevBootstrap implements CommandLineRunner {
 
-    private final JobTypeRepository jobTypeRepository;
     private final EmailJobRepository emailJobRepository;
     private final ReminderJobRepository reminderJobRepository;
     private final JobRepository jobRepository;
@@ -35,7 +32,6 @@ public class DevBootstrap implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         log.info("loading data completed");
-        //createJobTypeSamples();
         createJobs();
     }
 
@@ -68,15 +64,6 @@ public class DevBootstrap implements CommandLineRunner {
 
         System.out.println("getting the all available jobs...");
         System.out.println(jobService.findAll());
-    }
-    private void createJobTypeSamples(){
-        JobType email = JobType.builder().jobName("Email").build();
-        JobType reminder = JobType.builder().jobName("Reminder").build();
-        JobType fileHandler = JobType.builder().jobName("FileHanlder").build();
-
-        jobTypeRepository.save(email);
-        jobTypeRepository.save(reminder);
-        jobTypeRepository.save(fileHandler);
     }
 
 }
