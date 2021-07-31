@@ -28,8 +28,6 @@ public class Job implements Serializable {
 
     public static final long serialVersionUID = 12L;
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -37,16 +35,16 @@ public class Job implements Serializable {
     @Column(name = "job_id", length = 36)
     private UUID jobId;
 
-    @CreationTimestamp
+    @CreationTimestamp // for auditing
     @Setter(AccessLevel.NONE)
     @Column(name = "creation_date", nullable = false ,updatable = false)
     private Timestamp createdAt;
 
-    @UpdateTimestamp
+    @UpdateTimestamp // for auditing
     @Column(name = "last_update_date",nullable = false)
     private Timestamp updatedAt;
 
-    @Version
+    @Version // locking
     public Long version;
 
     @Enumerated(value = EnumType.STRING)
@@ -62,6 +60,9 @@ public class Job implements Serializable {
     @Enumerated(value = EnumType.STRING)
     @Column(name = "job_priority")
     private JobPriority jobPriority;
+
+    @Column(name="job_type", nullable=false, updatable=false, insertable=false)
+    private String jobType;
 
     public Job(LocalDateTime jobExecutionTime, JobPriority jobPriority) {
         this.jobExecutionTime = jobExecutionTime;

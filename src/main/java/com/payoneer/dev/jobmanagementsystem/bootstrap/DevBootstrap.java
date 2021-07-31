@@ -9,6 +9,8 @@ import com.payoneer.dev.jobmanagementsystem.repositories.EmailJobRepository;
 import com.payoneer.dev.jobmanagementsystem.repositories.JobRepository;
 import com.payoneer.dev.jobmanagementsystem.repositories.JobTypeRepository;
 import com.payoneer.dev.jobmanagementsystem.repositories.ReminderJobRepository;
+import com.payoneer.dev.jobmanagementsystem.services.EmailJobService;
+import com.payoneer.dev.jobmanagementsystem.services.JobService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.CommandLineRunner;
@@ -26,6 +28,8 @@ public class DevBootstrap implements CommandLineRunner {
     private final EmailJobRepository emailJobRepository;
     private final ReminderJobRepository reminderJobRepository;
     private final JobRepository jobRepository;
+    private final EmailJobService emailJobService;
+    private final JobService jobService;
 
     @Override
     public void run(String... args) throws Exception {
@@ -59,6 +63,11 @@ public class DevBootstrap implements CommandLineRunner {
 
         EmailJob build = EmailJob.builder().messageBody("sdd").sender("Ss").receiver("Sss").jobPriority(JobPriority.LOW).jobExecutionTime(LocalDateTime.now()).build();
         emailJobRepository.save(build);
+
+        emailJobService.deleteById(null);
+
+        System.out.println("getting the all available jobs...");
+        System.out.println(jobService.findAll());
     }
     private void createJobTypeSamples(){
         JobType email = JobType.builder().jobName("Email").build();

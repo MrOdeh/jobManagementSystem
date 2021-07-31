@@ -10,6 +10,6 @@ import java.util.UUID;
 @Repository
 public interface ReminderJobRepository extends JpaRepository<ReminderJob, UUID> {
 
-
     Optional<ReminderJob> findOneByJobId(UUID ID);
+    void deleteReminderJobByJobId(UUID id);
 }

@@ -1,19 +1,16 @@
 package com.payoneer.dev.jobmanagementsystem.domain;
 
 import com.payoneer.dev.jobmanagementsystem.enumeration.JobPriority;
-import com.payoneer.dev.jobmanagementsystem.enumeration.JobStatus;
 import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@Builder
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor

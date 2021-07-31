@@ -11,4 +11,5 @@ import java.util.UUID;
 public interface EmailJobRepository extends JpaRepository<EmailJob, UUID> {
 
     Optional<EmailJob> findOneByJobId(UUID id);
+    void deleteEmailJobByJobId(UUID id);
 }

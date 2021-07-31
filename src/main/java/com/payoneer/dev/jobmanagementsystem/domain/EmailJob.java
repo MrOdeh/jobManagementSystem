@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "email_job")
 @DiscriminatorValue(value = "email")
