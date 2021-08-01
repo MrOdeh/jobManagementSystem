@@ -1,6 +1,5 @@
 package com.payoneer.dev.jobmanagementsystem.domain;
 
-import com.payoneer.dev.jobmanagementsystem.domain.Job;
 import com.payoneer.dev.jobmanagementsystem.enumeration.JobPriority;
 import lombok.*;
 

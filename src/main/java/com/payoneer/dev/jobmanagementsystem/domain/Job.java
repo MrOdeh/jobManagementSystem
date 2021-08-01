@@ -48,8 +48,8 @@ public class Job implements Serializable {
     @Column(name = "last_update_date",nullable = false)
     private Timestamp updatedAt;
 
-    @Version // locking
-    public Long version;
+//    @Version // locking //
+//    public Long version;
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "job_status")

@@ -23,8 +23,6 @@ public class EmailJobController {
     @PostMapping(value = "/")
     public ResponseEntity<EmailJob> save(@RequestBody EmailJob job,
                                         @RequestParam(value="schedule", required = false, defaultValue = "false") boolean schedule){
-
-
         return new ResponseEntity(emailJobService.save(job, schedule), HttpStatus.CREATED);
     }
 

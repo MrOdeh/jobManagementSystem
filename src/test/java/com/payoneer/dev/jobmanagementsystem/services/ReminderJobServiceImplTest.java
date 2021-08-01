@@ -2,6 +2,7 @@ package com.payoneer.dev.jobmanagementsystem.services;
 
 import com.payoneer.dev.jobmanagementsystem.domain.ReminderJob;
 import com.payoneer.dev.jobmanagementsystem.repositories.ReminderJobRepository;
+import com.payoneer.dev.jobmanagementsystem.services.impl.ReminderJobServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

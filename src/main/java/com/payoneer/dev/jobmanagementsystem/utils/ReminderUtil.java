@@ -6,7 +6,8 @@ import com.payoneer.dev.jobmanagementsystem.repositories.ReminderJobRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -17,6 +18,7 @@ public class ReminderUtil {
 
     private final ReminderJobRepository reminderJobRepository;
 
+    @Transactional
     public ReminderJob sendAndFlush(ReminderJob job) {
 
         // every job starts with Queued status

@@ -8,6 +8,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -21,6 +23,7 @@ public class EmailUtil {
     private final JavaMailSender javaMailSender;
 
     // FAKE
+    @Transactional
     public EmailJob sendAndFlush(EmailJob job) {
         // every job starts with Queued status
         // update the status to running in order to martian business need

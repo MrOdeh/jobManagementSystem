@@ -19,6 +19,6 @@ public class JobController {
 
     @GetMapping(value = "/")
     public ResponseEntity<Job> getAll(){
-        return new ResponseEntity(jobService.findAll(), HttpStatus.OK);
+        return new ResponseEntity(jobService.findAllJobNames(), HttpStatus.OK);
     }
 }

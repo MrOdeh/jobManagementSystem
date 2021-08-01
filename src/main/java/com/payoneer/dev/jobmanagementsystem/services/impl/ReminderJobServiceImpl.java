@@ -1,8 +1,9 @@
-package com.payoneer.dev.jobmanagementsystem.services;
+package com.payoneer.dev.jobmanagementsystem.services.impl;
 
 import com.payoneer.dev.jobmanagementsystem.domain.ReminderJob;
 import com.payoneer.dev.jobmanagementsystem.exception.GenericClientException;
 import com.payoneer.dev.jobmanagementsystem.repositories.ReminderJobRepository;
+import com.payoneer.dev.jobmanagementsystem.services.ReminderJobService;
 import com.payoneer.dev.jobmanagementsystem.utils.ReminderUtil;
 import com.payoneer.dev.jobmanagementsystem.utils.Validation;
 import lombok.RequiredArgsConstructor;

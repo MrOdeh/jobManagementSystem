@@ -1,8 +1,9 @@
-package com.payoneer.dev.jobmanagementsystem.services;
+package com.payoneer.dev.jobmanagementsystem.services.impl;
 
 import com.payoneer.dev.jobmanagementsystem.domain.EmailJob;
 import com.payoneer.dev.jobmanagementsystem.exception.GenericClientException;
 import com.payoneer.dev.jobmanagementsystem.repositories.EmailJobRepository;
+import com.payoneer.dev.jobmanagementsystem.services.EmailJobService;
 import com.payoneer.dev.jobmanagementsystem.utils.EmailUtil;
 import com.payoneer.dev.jobmanagementsystem.utils.Validation;
 import lombok.RequiredArgsConstructor;
