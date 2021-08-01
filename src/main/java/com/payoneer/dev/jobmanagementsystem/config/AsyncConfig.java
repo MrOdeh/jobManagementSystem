@@ -40,4 +40,5 @@ public class AsyncConfig {
         threadPoolTaskExecutor.initialize();
         return threadPoolTaskExecutor;
     }
+
 }
