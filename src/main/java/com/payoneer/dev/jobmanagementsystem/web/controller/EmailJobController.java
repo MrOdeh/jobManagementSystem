@@ -21,13 +21,17 @@ public class EmailJobController {
     }
 
     @PostMapping(value = "/")
-    public ResponseEntity<EmailJob> save(@RequestBody EmailJob job){
-        return new ResponseEntity(emailJobService.save(job), HttpStatus.CREATED);
+    public ResponseEntity<EmailJob> save(@RequestBody EmailJob job,
+                                        @RequestParam(value="schedule", required = false, defaultValue = "false") boolean schedule){
+
+
+        return new ResponseEntity(emailJobService.save(job, schedule), HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/")
-    public ResponseEntity<EmailJob> update(@RequestBody EmailJob job){
-        return new ResponseEntity(emailJobService.save(job), HttpStatus.ACCEPTED);
+    public ResponseEntity<EmailJob> update(@RequestBody EmailJob job,
+                                           @RequestParam(value="schedule", required = false, defaultValue = "false") boolean schedule){
+        return new ResponseEntity(emailJobService.save(job, schedule), HttpStatus.ACCEPTED);
     }
 
     @ResponseStatus(value = HttpStatus.OK)

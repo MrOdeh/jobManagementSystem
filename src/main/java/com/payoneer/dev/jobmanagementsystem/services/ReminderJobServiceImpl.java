@@ -3,6 +3,8 @@ package com.payoneer.dev.jobmanagementsystem.services;
 import com.payoneer.dev.jobmanagementsystem.domain.ReminderJob;
 import com.payoneer.dev.jobmanagementsystem.exception.GenericClientException;
 import com.payoneer.dev.jobmanagementsystem.repositories.ReminderJobRepository;
+import com.payoneer.dev.jobmanagementsystem.utils.ReminderUtil;
+import com.payoneer.dev.jobmanagementsystem.utils.Validation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,8 @@ import java.util.UUID;
 public class ReminderJobServiceImpl implements ReminderJobService {
 
     private final ReminderJobRepository reminderJobRepository;
+    private final Validation validation;
+    private final ReminderUtil reminderUtil;
 
     @Override
     public ReminderJob findById(String id) {
@@ -28,8 +32,24 @@ public class ReminderJobServiceImpl implements ReminderJobService {
         }
     }
     @Override
-    public ReminderJob save(ReminderJob job) {
-        return reminderJobRepository.save(job);
+    public ReminderJob save(ReminderJob job, boolean schedule) {
+        // validate E-mail & execution time
+        if(!validation.isNumberValid(job.getMobileNumber())){
+            throw new GenericClientException("invalid Mobile Number", HttpStatus.BAD_REQUEST);
+        }
+
+        // if Not immediately then i have to validate the date
+        if (schedule && !validation.isDateValid(job.getJobExecutionTime())) {
+            throw new GenericClientException("Invalid Date",HttpStatus.BAD_REQUEST);
+        }
+
+        // Not immediately, then job must be saved and the background service will handle it according to execution time :)
+        if(!schedule){
+            return reminderJobRepository.save(job);
+        }
+
+        // immediate execution
+        return reminderUtil.sendAndFlush(job);
     }
 
     @Transactional

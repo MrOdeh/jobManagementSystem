@@ -9,13 +9,14 @@ import com.payoneer.dev.jobmanagementsystem.repositories.JobRepository;
 import com.payoneer.dev.jobmanagementsystem.repositories.ReminderJobRepository;
 import com.payoneer.dev.jobmanagementsystem.services.EmailJobService;
 import com.payoneer.dev.jobmanagementsystem.services.JobService;
+import com.payoneer.dev.jobmanagementsystem.services.ReminderJobService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-
 import java.time.LocalDateTime;
-import java.util.UUID;
+
+
 
 @Log4j2
 @RequiredArgsConstructor
@@ -26,33 +27,39 @@ public class DevBootstrap implements CommandLineRunner {
     private final ReminderJobRepository reminderJobRepository;
     private final JobRepository jobRepository;
     private final EmailJobService emailJobService;
+    private final ReminderJobService reminderJobService;
     private final JobService jobService;
+
+
 
     @Override
     public void run(String... args) throws Exception {
 
         log.info("loading data completed");
         createJobs();
+        log.info("sending messages :)");
+
     }
+
 
 
     private final void createJobs(){
 
-        ReminderJob reminderJob = new ReminderJob(LocalDateTime.now(), JobPriority.LOW, "description", "00798313098");
-        ReminderJob anotherRminder = new ReminderJob(LocalDateTime.now(), JobPriority.MEDIUM, "description2", "0079");
+        ReminderJob reminderJob = new ReminderJob(LocalDateTime.now(), JobPriority.LOW, "description", "98313098");
+        ReminderJob anotherRminder = new ReminderJob(LocalDateTime.now(), JobPriority.MEDIUM, "description2", "79387482");
 
-        EmailJob emailJob = new EmailJob(LocalDateTime.now(), JobPriority.MEDIUM, "body", "sender","revicer");
-        EmailJob anotherEmail = new EmailJob(LocalDateTime.now(), JobPriority.HIGH, "body2", "sender2","revicer2");
+        EmailJob emailJob = new EmailJob(LocalDateTime.now(), JobPriority.MEDIUM, "body", "ma@payoneer.com","mad@payoneer.com");
+        EmailJob anotherEmail = new EmailJob(LocalDateTime.now(), JobPriority.HIGH, "body2", "mas@payoneer.com","ma@payoneer.com");
 
-        emailJobRepository.save(emailJob);
-        reminderJobRepository.save(reminderJob);
-        EmailJob saveEmail = emailJobRepository.save(anotherEmail);
-        ReminderJob savedReminder = reminderJobRepository.save(anotherRminder);
+        emailJobService.save(emailJob, false);
+        reminderJobService.save(reminderJob, false);
+        EmailJob saveEmail = emailJobService.save(anotherEmail, false);
+        ReminderJob savedReminder = reminderJobService.save(anotherRminder, false);
 
         log.info("finidin!!!!");
 
-        Job emailJobJob = emailJobRepository.findOneByJobId(UUID.fromString(saveEmail.getJobId().toString())).get();
-        Job reminderJobJob = reminderJobRepository.findOneByJobId(UUID.fromString(savedReminder.getJobId().toString())).get();
+        Job emailJobJob = emailJobService.findById(saveEmail.getJobId().toString());
+        Job reminderJobJob = reminderJobService.findById(savedReminder.getJobId().toString());
         System.out.println( "email# " + emailJobJob);
 
         System.out.println( "reminder# " + reminderJobJob);

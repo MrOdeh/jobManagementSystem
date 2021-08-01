@@ -21,13 +21,15 @@ public class ReminderJobController {
     }
 
     @PostMapping(value = "/")
-    public ResponseEntity<ReminderJob> save(@RequestBody ReminderJob job){
-        return new ResponseEntity(reminderJobService.save(job), HttpStatus.CREATED);
+    public ResponseEntity<ReminderJob> save(@RequestBody ReminderJob job,
+                                            @RequestParam(value="schedule", required = false, defaultValue = "false") boolean schedule){
+        return new ResponseEntity(reminderJobService.save(job,schedule), HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/")
-    public ResponseEntity<ReminderJob> update(@RequestBody ReminderJob job){
-        return new ResponseEntity(reminderJobService.save(job), HttpStatus.ACCEPTED);
+    public ResponseEntity<ReminderJob> update(@RequestBody ReminderJob job,
+                                              @RequestParam(value="schedule", required = false, defaultValue = "false") boolean schedule){
+        return new ResponseEntity(reminderJobService.save(job, schedule), HttpStatus.ACCEPTED);
     }
 
     @ResponseStatus(value = HttpStatus.OK)

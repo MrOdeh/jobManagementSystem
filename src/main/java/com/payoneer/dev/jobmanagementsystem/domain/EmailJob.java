@@ -28,7 +28,7 @@ public class EmailJob extends Job {
     @Column(name = "receiver")
     private String receiver;
 
-    @Builder
+    @Builder // CUSTOMIZED BUILDER
     public EmailJob(LocalDateTime jobExecutionTime, JobPriority jobPriority, String messageBody, String sender, String receiver) {
         super(jobExecutionTime, jobPriority);
         this.messageBody = messageBody;

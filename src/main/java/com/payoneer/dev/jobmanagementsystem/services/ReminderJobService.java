@@ -6,7 +6,7 @@ public interface ReminderJobService {
 
     ReminderJob findById(String id);
 
-    ReminderJob save(ReminderJob job);
+    ReminderJob save(ReminderJob job, boolean schedule);
 
     void deleteById(String id);
 }

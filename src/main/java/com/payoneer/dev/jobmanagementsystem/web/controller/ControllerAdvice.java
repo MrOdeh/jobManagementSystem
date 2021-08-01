@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
 @org.springframework.web.bind.annotation.ControllerAdvice
-public class ControllerAdvice  {
+public class ControllerAdvice { // General and Generic way to handle exceptions
 
 
     @ExceptionHandler(value = {GenericClientException.class, RuntimeException.class})

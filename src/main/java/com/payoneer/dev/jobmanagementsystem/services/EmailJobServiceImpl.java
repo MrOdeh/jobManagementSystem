@@ -3,11 +3,12 @@ package com.payoneer.dev.jobmanagementsystem.services;
 import com.payoneer.dev.jobmanagementsystem.domain.EmailJob;
 import com.payoneer.dev.jobmanagementsystem.exception.GenericClientException;
 import com.payoneer.dev.jobmanagementsystem.repositories.EmailJobRepository;
+import com.payoneer.dev.jobmanagementsystem.utils.EmailUtil;
+import com.payoneer.dev.jobmanagementsystem.utils.Validation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.transaction.Transactional;
 import java.util.UUID;
@@ -18,6 +19,8 @@ import java.util.UUID;
 public class EmailJobServiceImpl implements EmailJobService {
 
     private final EmailJobRepository emailJobRepository;
+    private final Validation validation;
+    private final EmailUtil emailUtil;
 
     @Override
     public EmailJob findById(String id) {
@@ -30,8 +33,25 @@ public class EmailJobServiceImpl implements EmailJobService {
     }
 
     @Override
-    public EmailJob save(EmailJob job) {
-        return emailJobRepository.save(job);
+    public EmailJob save(EmailJob job, boolean schedule) {
+        // validate E-mail & execution time
+        if(!(validation.isEmailValid(job.getSender()) && validation.isEmailValid(job.getReceiver()))){
+            throw new GenericClientException("invalid email address",HttpStatus.BAD_REQUEST);
+        }
+
+        // if Not immediately then i have to validate the date
+        if (schedule && !validation.isDateValid(job.getJobExecutionTime())) {
+            throw new GenericClientException("Invalid Date",HttpStatus.BAD_REQUEST);
+        }
+
+        // Not immediately, then job must be saved and the background service will handle it according to execution time :)
+        if(!schedule){
+            return emailJobRepository.save(job);
+        }
+
+        // immediate execution
+        return emailUtil.sendAndFlush(job);
+
     }
 
     @Transactional
