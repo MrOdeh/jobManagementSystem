@@ -44,24 +44,25 @@ public class JobBackgroundManagementEvent {
      it will retrun all data from both tables and then i can easily deal with them with OOP polymorphism  */
     //@Scheduled(fixedRate = 2000)
     public void batchlookup(){
-        if(!enableBackgroundProcessing){ // to avoid batch collusion or handle data that held by another previous thread
+        if(!enableBackgroundProcessing){ // to avoid batch collusion or handle data that held by another thread
             return;
         }
         // by using this mechanism the data will never be inconsistency and if there's running batch the method will return as above :)
         setEnableBackgroundProcessing(false);
         // fetch data which has :
         // 1-Queued status
-        // 2- execution dateTime with now() and now() + 2 seconds
+        // 2-execution dateTime with now() and now() + 2 seconds
+        // then --
         // 3- sort them based on Job Propriety --> this can be straightforward from the query itself but i prefer Onfly implementation
         // 4- execute them on parallel approach
-        jobService.findAll()
+        jobService.findAllUnprocessedJobs()
                 .stream()
                 .sorted(Comparator.comparing(val -> val.getJobPriority().getValue()))
                 .forEach(job -> jobHandler(job));
         setEnableBackgroundProcessing(true);
     }
 
-    @Async
+    @Async // it will use avaialble thread in pool config
     public void jobHandler(Job job){ // in case N of possible jobs increased i would like to replace switch case with design pattern approach
         switch (job.getJobType()){
             case "email":
