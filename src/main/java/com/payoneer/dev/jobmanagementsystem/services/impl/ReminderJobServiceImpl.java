@@ -1,6 +1,7 @@
 package com.payoneer.dev.jobmanagementsystem.services.impl;
 
 import com.payoneer.dev.jobmanagementsystem.domain.ReminderJob;
+import com.payoneer.dev.jobmanagementsystem.enumeration.JobStatus;
 import com.payoneer.dev.jobmanagementsystem.exception.GenericClientException;
 import com.payoneer.dev.jobmanagementsystem.repositories.ReminderJobRepository;
 import com.payoneer.dev.jobmanagementsystem.services.ReminderJobService;
@@ -12,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Comparator;
+import java.util.List;
 import java.util.UUID;
 
 @Log4j2
@@ -32,6 +35,12 @@ public class ReminderJobServiceImpl implements ReminderJobService {
             throw new GenericClientException("Invalid User Input", HttpStatus.BAD_REQUEST);
         }
     }
+
+    @Override
+    public List<ReminderJob> findAll() {
+        return reminderJobRepository.findAll();
+    }
+
     @Override
     public ReminderJob save(ReminderJob job, boolean schedule) {
         // validate E-mail & execution time
@@ -65,5 +74,24 @@ public class ReminderJobServiceImpl implements ReminderJobService {
             log.error("invalid UUID");
             throw new GenericClientException("Invalid User Input", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @Override
+    public List<ReminderJob> saveAll(List<ReminderJob> jobs, boolean schedule) {
+        if(jobs == null || jobs.size() == 0){
+            throw new GenericClientException("invalid user Input",HttpStatus.BAD_REQUEST);
+        }
+
+        jobs.stream()
+                .sorted(Comparator.comparing(val -> val.getJobPriority().getValue()))
+                .forEach(job -> {
+                    if(!schedule && validation.isNumberValid(job.getMobileNumber())){
+                        reminderUtil.sendAndFlush(job); // immediate execution
+                    }else if(schedule && validation.isNumberValid(job.getMobileNumber()) && validation.isDateValid(job.getJobExecutionTime())){
+                        reminderJobRepository.save(job); // scheduled jobs will be handled by event handler
+                    }else{
+                        job.setJobStatus(JobStatus.FAILED);
+                    }});
+        return jobs;
     }
 }

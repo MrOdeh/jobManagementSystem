@@ -9,6 +9,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,4 +40,25 @@ public class JobServiceImpl implements JobService {
         return jobRepository.findAllByJobStatusAndJobExecutionTimeBetween(
                 JobStatus.QUEUED, LocalDateTime.now(), LocalDateTime.now().plusSeconds(2));
     }
+
+    @Override
+    public List<Job> findAllProcessedJobs() {
+        return jobRepository.findAllProccessdJobs(Arrays.asList(JobStatus.FAILED, JobStatus.SUCCESS, JobStatus.RUNNING));
+    }
+
+    @Override
+    public List<Job> findAllReminderJobs() {
+        return jobRepository.findAllByJobType("reminder");
+    }
+
+    @Override
+    public List<Job> findAllEmailJobs() {
+        return jobRepository.findAllByJobType("email");
+    }
+
+    @Override
+    public List<Job> findAllQueuedJobs() {
+        return jobRepository.findAllByJobStatus(JobStatus.QUEUED);
+    }
+
 }

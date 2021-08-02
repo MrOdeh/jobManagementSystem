@@ -12,6 +12,7 @@ import com.payoneer.dev.jobmanagementsystem.services.EmailJobService;
 import com.payoneer.dev.jobmanagementsystem.services.JobService;
 import com.payoneer.dev.jobmanagementsystem.services.ReminderJobService;
 import com.payoneer.dev.jobmanagementsystem.utils.EmailUtil;
+import com.payoneer.dev.jobmanagementsystem.utils.ReminderUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.CommandLineRunner;
@@ -36,6 +37,7 @@ public class DevBootstrap implements CommandLineRunner {
     private final ReminderJobService reminderJobService;
     private final JobService jobService;
     private final EmailUtil emailUtil;
+    private final ReminderUtil reminderUtil;
 
 
     @Override
@@ -47,12 +49,12 @@ public class DevBootstrap implements CommandLineRunner {
         /*jobRepository.findAll()
                 .forEach(p -> System.out.println("type # " + p.getJobType() + "  & executionTime# " + p.getJobExecutionTime() + "  status# " + p.getJobStatus()));
 */
-        createRandomly();
+        //createRandomly();
 //        System.out.println("neeededdd");
 //        jobRepository.findAllByJobStatusAndJobExecutionTimeBetween(JobStatus.QUEUED, LocalDateTime.now(), LocalDateTime.now().plusSeconds(2))
 //                .forEach(p -> System.out.println("type # " + p.getJobType() + "  & executionTime# " + p.getJobExecutionTime() + "  status# " + p.getJobStatus()));
 
-        sortWay();
+        //sortWay();
 
     }
 
@@ -89,6 +91,7 @@ public class DevBootstrap implements CommandLineRunner {
                     , "description", "98313098");
             //reminderJobRepository.save(reminderJob);
             emailUtil.sendAndFlush(emailJob);
+            reminderUtil.sendAndFlush(reminderJob);
         }
     }
     //@Transactional

@@ -2,6 +2,7 @@ package com.payoneer.dev.jobmanagementsystem.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -52,6 +53,7 @@ public class Job implements Serializable {
     private Timestamp updatedAt;
 
     @Version // locking //
+    @JsonIgnore
     public Long version;
 
     @Enumerated(value = EnumType.STRING)
@@ -75,9 +77,16 @@ public class Job implements Serializable {
     @Column(name="job_type", nullable=false, updatable=false, insertable=false)
     private String jobType;
 
+    // for all sub classes
     public Job(LocalDateTime jobExecutionTime, JobPriority jobPriority) {
         this.jobExecutionTime = jobExecutionTime;
         this.jobPriority = jobPriority;
+        this.jobStatus = JobStatus.QUEUED;
+    }
+
+    public Job(String jobType, LocalDateTime jobExecutionTime, JobPriority jobPriority){
+        this(jobExecutionTime, jobPriority);
+        this.jobType = jobType;
         this.jobStatus = JobStatus.QUEUED;
     }
 }
