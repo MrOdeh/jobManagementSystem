@@ -19,6 +19,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
+
 /*    this is a event handler, any job that postponed or scheduled to be executed later this service will take care of it*/
 @Component
 @RequiredArgsConstructor
@@ -40,21 +42,27 @@ public class JobBackgroundManagementEvent {
 
      /* see how amazing strategy = InheritanceType.JOINED which i can easily call get all jobs from job table
      it will retrun all data from both tables and then i can easily deal with them with OOP polymorphism  */
-    @Scheduled(fixedRate = 2000)
+    //@Scheduled(fixedRate = 2000)
     public void batchlookup(){
         if(!enableBackgroundProcessing){ // to avoid batch collusion or handle data that held by another previous thread
             return;
         }
         // by using this mechanism the data will never be inconsistency and if there's running batch the method will return as above :)
         setEnableBackgroundProcessing(false);
+        // fetch data which has :
+        // 1-Queued status
+        // 2- execution dateTime with now() and now() + 2 seconds
+        // 3- sort them based on Job Propriety --> this can be straightforward from the query itself but i prefer Onfly implementation
+        // 4- execute them on parallel approach
         jobService.findAll()
                 .stream()
+                .sorted(Comparator.comparing(val -> val.getJobPriority().getValue()))
                 .forEach(job -> jobHandler(job));
         setEnableBackgroundProcessing(true);
     }
 
     @Async
-    public void jobHandler(Job job){
+    public void jobHandler(Job job){ // in case N of possible jobs increased i would like to replace switch case with design pattern approach
         switch (job.getJobType()){
             case "email":
                 emailUtil.sendAndFlush((EmailJob) job);
@@ -63,7 +71,9 @@ public class JobBackgroundManagementEvent {
                 reminderUtil.sendAndFlush((ReminderJob) job);
                 break;
             default:
-                // inform any related parties
+                 /*inform any related parties
+                 here we can skip the new type of jobs since it can be handled by another service completely isolated
+                 and there will be NO CHANGE on current implementation */
                 System.out.println("its related to another job type");
         }
     }

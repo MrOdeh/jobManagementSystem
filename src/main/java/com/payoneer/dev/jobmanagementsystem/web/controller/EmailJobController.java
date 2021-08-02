@@ -2,11 +2,14 @@ package com.payoneer.dev.jobmanagementsystem.web.controller;
 
 
 import com.payoneer.dev.jobmanagementsystem.domain.EmailJob;
+import com.payoneer.dev.jobmanagementsystem.repositories.EmailJobRepository;
 import com.payoneer.dev.jobmanagementsystem.services.EmailJobService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -20,10 +23,21 @@ public class EmailJobController {
         return ResponseEntity.ok(emailJobService.findById(id));
     }
 
+    @GetMapping(value = "/bulk")
+    public ResponseEntity<List<EmailJob>> getAll(){
+        return ResponseEntity.ok(emailJobService.findAll());
+    }
+
     @PostMapping(value = "/")
     public ResponseEntity<EmailJob> save(@RequestBody EmailJob job,
                                         @RequestParam(value="schedule", required = false, defaultValue = "false") boolean schedule){
         return new ResponseEntity(emailJobService.save(job, schedule), HttpStatus.CREATED);
+    }
+
+    @PostMapping(value = "/bulk")
+    public ResponseEntity<EmailJob> saveAll(@RequestBody List<EmailJob> jobs,
+                                         @RequestParam(value="schedule", required = false, defaultValue = "false") boolean schedule){
+        return new ResponseEntity(emailJobService.saveAll(jobs, schedule), HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/")

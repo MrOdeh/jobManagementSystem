@@ -1,6 +1,8 @@
 package com.payoneer.dev.jobmanagementsystem.services.impl;
 
 import com.payoneer.dev.jobmanagementsystem.domain.EmailJob;
+import com.payoneer.dev.jobmanagementsystem.domain.Job;
+import com.payoneer.dev.jobmanagementsystem.enumeration.JobStatus;
 import com.payoneer.dev.jobmanagementsystem.exception.GenericClientException;
 import com.payoneer.dev.jobmanagementsystem.repositories.EmailJobRepository;
 import com.payoneer.dev.jobmanagementsystem.services.EmailJobService;
@@ -12,7 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Stream;
 
 @Log4j2
 @Service
@@ -31,6 +34,11 @@ public class EmailJobServiceImpl implements EmailJobService {
             log.error("invalid user input");
             throw new GenericClientException("Invalid User Input", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @Override
+    public List<EmailJob> findAll() {
+        return emailJobRepository.findAll();
     }
 
     @Override
@@ -67,5 +75,25 @@ public class EmailJobServiceImpl implements EmailJobService {
             log.error("invalid UUID");
             throw new GenericClientException("Invalid User Input", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @Override
+    public List<EmailJob> saveAll(List<EmailJob> jobs, boolean schedule) {
+
+        if(jobs == null || jobs.size() == 0){
+            throw new GenericClientException("invalid user Input",HttpStatus.BAD_REQUEST);
+        }
+        jobs.stream()
+                .sorted(Comparator.comparing(val -> val.getJobPriority().getValue()))
+                .forEach(job -> {
+                    if(!schedule && (validation.isEmailValid(job.getSender()) && validation.isEmailValid(job.getReceiver()))){
+                        emailUtil.sendAndFlush(job); // immediate execution
+                    }else if(schedule && (validation.isEmailValid(job.getSender()) && validation.isEmailValid(job.getReceiver())
+                            && validation.isDateValid(job.getJobExecutionTime()))){
+                        emailJobRepository.save(job); // scheduled jobs will be handled by event handler
+                    }else{
+                        job.setJobStatus(JobStatus.FAILED);
+                    }});
+        return jobs;
     }
 }

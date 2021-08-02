@@ -1,6 +1,7 @@
 package com.payoneer.dev.jobmanagementsystem.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -42,14 +43,16 @@ public class Job implements Serializable {
     @CreationTimestamp // for auditing
     @Setter(AccessLevel.NONE)
     @Column(name = "creation_date", nullable = false ,updatable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Berlin")
     private Timestamp createdAt;
 
     @UpdateTimestamp // for auditing
     @Column(name = "last_update_date",nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Berlin")
     private Timestamp updatedAt;
 
-//    @Version // locking //
-//    public Long version;
+    @Version // locking //
+    public Long version;
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "job_status")
@@ -57,10 +60,12 @@ public class Job implements Serializable {
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Berlin")
     @Column(name = "job_execution_time")
     private LocalDateTime jobExecutionTime;
 
     @Column(name = "completed_at")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Berlin")
     private LocalDateTime completedAt;
 
     @Enumerated(value = EnumType.STRING)

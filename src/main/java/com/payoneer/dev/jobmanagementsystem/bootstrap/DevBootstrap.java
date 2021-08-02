@@ -11,6 +11,7 @@ import com.payoneer.dev.jobmanagementsystem.repositories.ReminderJobRepository;
 import com.payoneer.dev.jobmanagementsystem.services.EmailJobService;
 import com.payoneer.dev.jobmanagementsystem.services.JobService;
 import com.payoneer.dev.jobmanagementsystem.services.ReminderJobService;
+import com.payoneer.dev.jobmanagementsystem.utils.EmailUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.CommandLineRunner;
@@ -18,7 +19,9 @@ import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 
 @Log4j2
@@ -32,6 +35,7 @@ public class DevBootstrap implements CommandLineRunner {
     private final EmailJobService emailJobService;
     private final ReminderJobService reminderJobService;
     private final JobService jobService;
+    private final EmailUtil emailUtil;
 
 
     @Override
@@ -44,18 +48,47 @@ public class DevBootstrap implements CommandLineRunner {
                 .forEach(p -> System.out.println("type # " + p.getJobType() + "  & executionTime# " + p.getJobExecutionTime() + "  status# " + p.getJobStatus()));
 */
         createRandomly();
-        System.out.println("neeededdd");
-        jobRepository.findAllByJobStatusAndJobExecutionTimeBetween(JobStatus.QUEUED, LocalDateTime.now(), LocalDateTime.now().plusSeconds(2))
-                .forEach(p -> System.out.println("type # " + p.getJobType() + "  & executionTime# " + p.getJobExecutionTime() + "  status# " + p.getJobStatus()));
+//        System.out.println("neeededdd");
+//        jobRepository.findAllByJobStatusAndJobExecutionTimeBetween(JobStatus.QUEUED, LocalDateTime.now(), LocalDateTime.now().plusSeconds(2))
+//                .forEach(p -> System.out.println("type # " + p.getJobType() + "  & executionTime# " + p.getJobExecutionTime() + "  status# " + p.getJobStatus()));
 
+        sortWay();
+
+    }
+
+    private void sortWay() {
+        Job job;
+        List<Job> jobs = new ArrayList<>();
+        for(int index = 0; index < 20; index++) {
+            job = new ReminderJob(LocalDateTime.now().plusSeconds(index),
+                    index % 2 == 0 ? JobPriority.LOW : index == 3 || index == 6 || index == 12 || index == 16 ? JobPriority.MEDIUM : JobPriority.HIGH
+                    , "description", "98313098");
+            jobs.add(job);
+            job = new EmailJob(LocalDateTime.now().plusSeconds(index),
+                    index % 2 == 0 ? JobPriority.HIGH : index == 3 || index == 6 || index == 12 || index == 16 ? JobPriority.MEDIUM : JobPriority.LOW ,
+                    "body", "ma@payoneer.com", "mad@payoneer.com");
+            jobs.add(job);
+        }
+
+        System.out.println("finished### viewing");
+
+        jobs.stream()
+                .sorted(Comparator.comparing(val -> val.getJobPriority().getValue()))
+                .forEach(p -> System.out.println("type# " + p.getJobType() + "  job priority# " + p.getJobPriority()));
     }
 
     public void createRandomly() {
 
         for(int index = 0; index < 200; index++) {
-            emailJobRepository.save(new EmailJob(LocalDateTime.now().plusSeconds(index), JobPriority.MEDIUM, "body", "ma@payoneer.com", "mad@payoneer.com"));
-            reminderJobRepository.save(new ReminderJob(LocalDateTime.now().plusSeconds(index), JobPriority.LOW, "description", "98313098"));
-
+            EmailJob emailJob = new EmailJob(LocalDateTime.now().plusSeconds(index),
+                    index % 2 == 0 ? JobPriority.HIGH : index == 3 || index == 6 || index == 12 || index == 16 ? JobPriority.MEDIUM : JobPriority.LOW ,
+                    "body", "ma@payoneer.com", "mad@payoneer.com");
+            //emailJobRepository.save(emailJob);
+            ReminderJob reminderJob = new ReminderJob(LocalDateTime.now().plusSeconds(index),
+                    index % 2 == 0 ? JobPriority.LOW : index == 3 || index == 6 || index == 12 || index == 16 ? JobPriority.MEDIUM : JobPriority.HIGH
+                    , "description", "98313098");
+            //reminderJobRepository.save(reminderJob);
+            emailUtil.sendAndFlush(emailJob);
         }
     }
     //@Transactional
