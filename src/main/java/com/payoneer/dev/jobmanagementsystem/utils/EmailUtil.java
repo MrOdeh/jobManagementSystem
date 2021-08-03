@@ -26,7 +26,6 @@ public class EmailUtil {
     @Transactional
 /*    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)*/
     public EmailJob sendAndFlush(EmailJob job) {
-        log.info("handled by# " + Thread.currentThread().getName());
         // every job starts with Queued status
         // update the status to running in order to martian business need
         log.info("starting Email Job for# " + job);

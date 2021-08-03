@@ -1,18 +1,12 @@
 package com.payoneer.dev.jobmanagementsystem.event;
 
 
-import com.payoneer.dev.jobmanagementsystem.domain.EmailJob;
-import com.payoneer.dev.jobmanagementsystem.domain.Job;
-import com.payoneer.dev.jobmanagementsystem.domain.ReminderJob;
 import com.payoneer.dev.jobmanagementsystem.services.JobService;
-import com.payoneer.dev.jobmanagementsystem.utils.EmailUtil;
-import com.payoneer.dev.jobmanagementsystem.utils.ReminderUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -25,9 +19,8 @@ import java.util.Comparator;
 @PropertySource("classpath:config.properties")
 public class JobBackgroundManagementEvent {
 
-    private final EmailUtil emailUtil;
-    private final ReminderUtil reminderUtil;
     private final JobService jobService;
+    private final QueueHandler queueHandler;
 
     @Value("${thread.enablebackgroundjobs}")
     private boolean enableBackgroundProcessing = true;
@@ -55,25 +48,8 @@ public class JobBackgroundManagementEvent {
         jobService.findAllUnprocessedJobs()
                 .stream()
                 .sorted(Comparator.comparing(val -> val.getJobPriority().getValue()))
-                .forEach(job -> jobHandler(job));
+                .forEach(job -> queueHandler.jobHandler(job));
         setEnableBackgroundProcessing(true);
     }
 
-    @Async // it will use available thread in pool config
-    public void jobHandler(Job job){ // in case N of possible jobs increased i would like to replace switch case with design pattern approach
-        switch (job.getJobType()){
-            case "email":
-                emailUtil.sendAndFlush((EmailJob) job);
-                break;
-            case "reminder":
-                reminderUtil.sendAndFlush((ReminderJob) job);
-                break;
-            default:
-                 /*inform any related parties
-                 here we can skip the new type of jobs since it can be handled by another service completely isolated
-                 and there will be NO CHANGE on current implementation */
-                log.info("its related to another job type");
-        }
-    }
-    
 }

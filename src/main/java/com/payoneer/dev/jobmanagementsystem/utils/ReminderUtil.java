@@ -21,7 +21,6 @@ public class ReminderUtil {
     @Transactional
 /*    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)*/
     public ReminderJob sendAndFlush(ReminderJob job) {
-        log.info("handled by# " + Thread.currentThread().getName());
         // every job starts with Queued status
         // update the status to running in order to martian business need
         log.info("starting Reminder Job for# " + job);
