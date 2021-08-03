@@ -52,9 +52,11 @@ public class Job implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Berlin")
     private Timestamp updatedAt;
 
+/*
     @Version // locking //
     @JsonIgnore
     public Long version;
+*/
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "job_status")

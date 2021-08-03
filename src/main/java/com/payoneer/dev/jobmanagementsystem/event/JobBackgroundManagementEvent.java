@@ -72,7 +72,7 @@ public class JobBackgroundManagementEvent {
                  /*inform any related parties
                  here we can skip the new type of jobs since it can be handled by another service completely isolated
                  and there will be NO CHANGE on current implementation */
-                System.out.println("its related to another job type");
+                log.info("its related to another job type");
         }
     }
     
