@@ -21,6 +21,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+// this is the core of this project
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
