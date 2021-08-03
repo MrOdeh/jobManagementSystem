@@ -44,7 +44,7 @@ public class EmailJobServiceImpl implements EmailJobService {
     @Override
     public EmailJob save(EmailJob job, boolean schedule) {
         // validate E-mail & execution time
-        if(!(validation.isEmailValid(job.getSender()) && validation.isEmailValid(job.getReceiver()))){
+        if(!validation.isEmailValid(job.getSender()) || !validation.isEmailValid(job.getReceiver())){
             throw new GenericClientException("invalid email address",HttpStatus.BAD_REQUEST);
         }
 
