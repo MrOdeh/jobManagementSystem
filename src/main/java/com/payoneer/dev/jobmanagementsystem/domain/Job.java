@@ -77,6 +77,10 @@ public class Job implements Serializable {
     @Column(name="job_type", nullable=false, updatable=false, insertable=false)
     private String jobType;
 
+    @Lob
+    @Column(name = "notes")
+    private String note;
+
     // for all sub classes
     public Job(LocalDateTime jobExecutionTime, JobPriority jobPriority) {
         this.jobExecutionTime = jobExecutionTime;

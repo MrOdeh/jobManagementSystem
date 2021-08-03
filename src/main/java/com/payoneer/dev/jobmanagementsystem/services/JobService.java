@@ -1,7 +1,6 @@
 package com.payoneer.dev.jobmanagementsystem.services;
 
 import com.payoneer.dev.jobmanagementsystem.domain.Job;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -20,4 +19,6 @@ public interface JobService {
     List<Job> findAllEmailJobs();
 
     List<Job> findAllQueuedJobs();
+
+    List<Job> saveAll(List<Job> jobs);
 }

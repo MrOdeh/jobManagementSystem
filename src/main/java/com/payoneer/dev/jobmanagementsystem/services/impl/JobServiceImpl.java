@@ -61,4 +61,9 @@ public class JobServiceImpl implements JobService {
         return jobRepository.findAllByJobStatus(JobStatus.QUEUED);
     }
 
+    @Override
+    public List<Job> saveAll(List<Job> jobs) {
+        return jobRepository.saveAll(jobs);
+    }
+
 }
