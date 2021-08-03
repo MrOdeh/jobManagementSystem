@@ -10,12 +10,13 @@
     </parent>
     <groupId>com.payoneer.dev</groupId>
     <artifactId>jobManagementSystem</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <version>0.1</version>
+    <packaging>jar</packaging>
     <name>jobManagementSystem</name>
     <description>jobManagementSystem</description>
     <properties>
         <java.version>11</java.version>
+        <jar.finalName>${project.name}</jar.finalName>
     </properties>
     <dependencies>
         <dependency>
@@ -90,6 +91,27 @@
                         </exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>**/*.java</include>
+                    </includes>
+                    <additionalClasspathElements>
+                        <additionalClasspathElement>${basedir}/target/classes</additionalClasspathElement>
+                    </additionalClasspathElements>
+                    <parallel>none</parallel>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

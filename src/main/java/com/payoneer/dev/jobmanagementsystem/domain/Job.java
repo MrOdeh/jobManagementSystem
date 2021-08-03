@@ -1,6 +1,5 @@
 package com.payoneer.dev.jobmanagementsystem.domain;
 
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
