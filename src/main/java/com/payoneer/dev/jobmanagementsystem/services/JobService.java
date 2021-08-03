@@ -1,24 +1,24 @@
 package com.payoneer.dev.jobmanagementsystem.services;
 
 import com.payoneer.dev.jobmanagementsystem.domain.Job;
+import com.payoneer.dev.jobmanagementsystem.enumeration.JobStatus;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface JobService {
 
-    List<String> findAllJobNames();
+    List<String> findAllJobsNames();
 
     List<Job> findAll();
 
-    List<Job> findAllUnprocessedJobs();
+    List<Job> findAllJobsByStatusAndExecutionTime(JobStatus status, LocalDateTime from, LocalDateTime to);
 
-    List<Job> findAllProcessedJobs();
+    List<Job> findAllJobsByType(String type);
 
-    List<Job> findAllReminderJobs();
-
-    List<Job> findAllEmailJobs();
-
-    List<Job> findAllQueuedJobs();
+    List<Job> findAllJobsByStatus(JobStatus status);
 
     List<Job> saveAll(List<Job> jobs);
+
+    Job save(Job job);
 }

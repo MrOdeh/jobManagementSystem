@@ -1,15 +1,16 @@
 package com.payoneer.dev.jobmanagementsystem.event;
 
 
+import com.payoneer.dev.jobmanagementsystem.enumeration.JobStatus;
 import com.payoneer.dev.jobmanagementsystem.services.JobService;
 import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 
 /*    this is a event handler, any job that postponed or scheduled to be executed later this service will take care of it*/
@@ -32,7 +33,7 @@ public class JobBackgroundManagementEvent {
 
      /* see how amazing strategy = InheritanceType.JOINED which i can easily call get all jobs from job table
      it will retrun all data from both tables and then i can easily deal with them with OOP polymorphism  */
-    @Scheduled(fixedRate = 2000)
+    //@Scheduled(fixedRate = 2000)
     public void batchlookup(){
         if(!enableBackgroundProcessing){ // to avoid batch collusion or handle data that held by another thread
             return;
@@ -45,7 +46,7 @@ public class JobBackgroundManagementEvent {
         // then --
         // 3- sort them based on Job Propriety --> this can be straightforward from the query itself but i prefer Onfly implementation
         // 4- execute them on parallel approach
-        jobService.findAllUnprocessedJobs()
+        jobService.findAllJobsByStatusAndExecutionTime(JobStatus.QUEUED, LocalDateTime.now(), LocalDateTime.now().plusSeconds(2))
                 .stream()
                 .sorted(Comparator.comparing(val -> val.getJobPriority().getValue()))
                 .forEach(job -> queueHandler.jobHandler(job));

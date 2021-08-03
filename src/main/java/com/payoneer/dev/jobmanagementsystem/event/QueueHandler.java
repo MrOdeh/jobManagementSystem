@@ -16,13 +16,13 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class QueueHandler {
 
-
     private final EmailUtil emailUtil;
     private final ReminderUtil reminderUtil;
+    private static final String THREAD_MESSAGE = "Thread# %s took Job %s";
 
     @Async // it will use available thread in pool config
     public void jobHandler(Job job){ // in case N of possible jobs increased i would like to replace switch case with design pattern approach
-        log.info("handled by# " + Thread.currentThread().getName());
+        log.info(String.format(THREAD_MESSAGE, Thread.currentThread().getName(), job));
         switch (job.getJobType()){
             case "email":
                 emailUtil.sendAndFlush((EmailJob) job);

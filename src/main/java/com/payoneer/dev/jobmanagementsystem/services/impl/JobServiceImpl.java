@@ -21,7 +21,7 @@ public class JobServiceImpl implements JobService {
     private final JobRepository jobRepository;
 
     @Override
-    public List<String> findAllJobNames() {
+    public List<String> findAllJobsNames() {
         return jobRepository.findAll()
                 .stream()
                 .map(job -> job.getJobType())
@@ -35,34 +35,28 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<Job> findAllUnprocessedJobs() {
-        return jobRepository.findAllByJobStatusAndJobExecutionTimeBetween(
-                JobStatus.QUEUED, LocalDateTime.now(), LocalDateTime.now().plusSeconds(2));
+    public List<Job> findAllJobsByStatusAndExecutionTime(JobStatus status, LocalDateTime from, LocalDateTime to) {
+        return jobRepository.findAllByJobStatusAndJobExecutionTimeBetween(status,from, to);
     }
 
     @Override
-    public List<Job> findAllProcessedJobs() {
-        return jobRepository.findAllProccessdJobs(Arrays.asList(JobStatus.FAILED, JobStatus.SUCCESS, JobStatus.RUNNING));
+    public List<Job> findAllJobsByType(String type) {
+        return jobRepository.findAllByJobType(type);
     }
 
     @Override
-    public List<Job> findAllReminderJobs() {
-        return jobRepository.findAllByJobType("reminder");
-    }
-
-    @Override
-    public List<Job> findAllEmailJobs() {
-        return jobRepository.findAllByJobType("email");
-    }
-
-    @Override
-    public List<Job> findAllQueuedJobs() {
-        return jobRepository.findAllByJobStatus(JobStatus.QUEUED);
+    public List<Job> findAllJobsByStatus(JobStatus status) {
+        return jobRepository.findAllByJobStatus(status);
     }
 
     @Override
     public List<Job> saveAll(List<Job> jobs) {
         return jobRepository.saveAll(jobs);
+    }
+
+    @Override
+    public Job save(Job job) {
+        return jobRepository.save(job);
     }
 
 }

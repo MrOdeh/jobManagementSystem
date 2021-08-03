@@ -70,12 +70,12 @@ class JobControllerTest {
     }
 
     @Test
-    void getAllJobs_JOBS() throws Exception {
+    void getAll() throws Exception {
         List<Job> jobs = new ArrayList<>();
         jobs = prepareJobs(jobs);
 
         Mockito.when(jobService.findAll()).thenReturn(jobs);
-        MvcResult mvcResult = mockMvc.perform(get("http://localhost:8080/v1/job/?key=all"))
+        MvcResult mvcResult = mockMvc.perform(get("http://localhost:8080/v1/job"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
@@ -87,13 +87,13 @@ class JobControllerTest {
     }
 
     @Test
-    void getAllJobs_NAMES() throws Exception {
+    void getAllJobsTypes() throws Exception {
         List<Job> jobs = new ArrayList<>();
         jobs = prepareJobs(jobs);
 
         List<String> availableJobs = Arrays.asList("email", "reminder");
-        Mockito.when(jobService.findAllJobNames()).thenReturn(availableJobs);
-        mockMvc.perform(get("http://localhost:8080/v1/job/?key=name"))
+        Mockito.when(jobService.findAllJobsNames()).thenReturn(availableJobs);
+        mockMvc.perform(get("http://localhost:8080/v1/job/availableTypes"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(availableJobs.toString()));
@@ -101,14 +101,14 @@ class JobControllerTest {
     }
 
     @Test
-    void getAllJobs_UNPROCCESSED() throws Exception {
+    void getAllJobsByStatus_UNPROCCESSED() throws Exception {
         List<Job> jobs = new ArrayList<>();
         jobs = prepareJobs(jobs);
         jobs.get(0).setJobStatus(JobStatus.QUEUED);
         jobs.get(1).setJobStatus(JobStatus.QUEUED);
 
-        Mockito.when(jobService.findAllQueuedJobs()).thenReturn(jobs);
-        MvcResult mvcResult =  mockMvc.perform(get("http://localhost:8080/v1/job/?key=unprocessed"))
+        Mockito.when(jobService.findAllJobsByStatus(JobStatus.QUEUED)).thenReturn(jobs);
+        MvcResult mvcResult =  mockMvc.perform(get("http://localhost:8080/v1/job/status?status=QUEUED"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();

@@ -4,7 +4,6 @@ import com.payoneer.dev.jobmanagementsystem.domain.EmailJob;
 import com.payoneer.dev.jobmanagementsystem.domain.Job;
 import com.payoneer.dev.jobmanagementsystem.domain.ReminderJob;
 import com.payoneer.dev.jobmanagementsystem.enumeration.JobPriority;
-import com.payoneer.dev.jobmanagementsystem.services.EmailJobService;
 import com.payoneer.dev.jobmanagementsystem.services.JobService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -29,13 +28,13 @@ public class DevBootstrap implements CommandLineRunner {
     public void run(String... args) throws Exception {
         log.info("Loading Random Data...");
         ArrayList<Job> jobs = new ArrayList<>();
-        jobService.saveAll(createJobs(jobs, 500));
+        jobService.saveAll(createJobs(jobs, 50));
         log.info("there are 1000 record has been loaded");
         log.info("Data has been loaded on http://localhost:8080/h2-console/");
         log.info("H2 credentials : ");
         log.info("Username: as");
         log.info("Password: password");
-        log.info("swagger link : /swagger-ui.html");
+        log.info("swagger link : http://localhost:8080/swagger-ui.html");
     }
 
     private final List<Job> createJobs(List<Job> jobs, int count){
@@ -65,5 +64,4 @@ public class DevBootstrap implements CommandLineRunner {
         }
         return jobs;
     }
-
 }
