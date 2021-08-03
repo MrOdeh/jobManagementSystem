@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,16 +23,19 @@ import java.util.List;
 public class DevBootstrap implements CommandLineRunner {
 
     private final JobService jobService;
-    private final EmailJobService emailJobService;
 
+    @Transactional
     @Override
     public void run(String... args) throws Exception {
         log.info("Loading Random Data...");
         ArrayList<Job> jobs = new ArrayList<>();
         jobService.saveAll(createJobs(jobs, 500));
+        log.info("there are 1000 record has been loaded");
         log.info("Data has been loaded on http://localhost:8080/h2-console/");
+        log.info("H2 credentials : ");
         log.info("Username: as");
         log.info("Password: password");
+        log.info("swagger link : /swagger-ui.html");
     }
 
     private final List<Job> createJobs(List<Job> jobs, int count){

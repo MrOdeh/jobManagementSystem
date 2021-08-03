@@ -1,7 +1,6 @@
 package com.payoneer.dev.jobmanagementsystem.services.impl;
 
 import com.payoneer.dev.jobmanagementsystem.domain.EmailJob;
-import com.payoneer.dev.jobmanagementsystem.domain.Job;
 import com.payoneer.dev.jobmanagementsystem.enumeration.JobStatus;
 import com.payoneer.dev.jobmanagementsystem.exception.GenericClientException;
 import com.payoneer.dev.jobmanagementsystem.repositories.EmailJobRepository;
@@ -14,8 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.*;
-import java.util.stream.Stream;
+import java.util.Comparator;
+import java.util.List;
+import java.util.UUID;
 
 @Log4j2
 @Service

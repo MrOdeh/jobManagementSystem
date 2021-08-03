@@ -1,6 +1,5 @@
 package com.payoneer.dev.jobmanagementsystem.web.controller;
 
-import com.payoneer.dev.jobmanagementsystem.domain.EmailJob;
 import com.payoneer.dev.jobmanagementsystem.domain.ReminderJob;
 import com.payoneer.dev.jobmanagementsystem.services.ReminderJobService;
 import io.swagger.v3.oas.annotations.tags.Tag;

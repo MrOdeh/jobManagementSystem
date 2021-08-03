@@ -5,8 +5,8 @@ import com.payoneer.dev.jobmanagementsystem.domain.EmailJob;
 import com.payoneer.dev.jobmanagementsystem.domain.Job;
 import com.payoneer.dev.jobmanagementsystem.domain.ReminderJob;
 import com.payoneer.dev.jobmanagementsystem.enumeration.JobPriority;
+import com.payoneer.dev.jobmanagementsystem.enumeration.JobStatus;
 import com.payoneer.dev.jobmanagementsystem.services.impl.JobServiceImpl;
-import com.payoneer.dev.jobmanagementsystem.services.impl.ReminderJobServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,16 +14,19 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -32,6 +35,9 @@ class JobControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    ObjectMapper objectMapper;
 
     @MockBean
     private JobServiceImpl jobService;
@@ -64,17 +70,54 @@ class JobControllerTest {
     }
 
     @Test
-    void getAllJobs() throws Exception {
+    void getAllJobs_JOBS() throws Exception {
         List<Job> jobs = new ArrayList<>();
         jobs = prepareJobs(jobs);
 
         Mockito.when(jobService.findAll()).thenReturn(jobs);
         MvcResult mvcResult = mockMvc.perform(get("http://localhost:8080/v1/job/?key=all"))
                 .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
         String contentAsString = mvcResult.getResponse().getContentAsString();
-        System.out.println(asJsonString(contentAsString));
+
+        List<Job> myObjects = Arrays.asList(objectMapper.readValue(contentAsString, Job[].class));
+        assertTrue(myObjects.get(0).getJobStatus().equals(jobs.get(0).getJobStatus()));
+    }
+
+    @Test
+    void getAllJobs_NAMES() throws Exception {
+        List<Job> jobs = new ArrayList<>();
+        jobs = prepareJobs(jobs);
+
+        List<String> availableJobs = Arrays.asList("email", "reminder");
+        Mockito.when(jobService.findAllJobNames()).thenReturn(availableJobs);
+        mockMvc.perform(get("http://localhost:8080/v1/job/?key=name"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(availableJobs.toString()));
+
+    }
+
+    @Test
+    void getAllJobs_UNPROCCESSED() throws Exception {
+        List<Job> jobs = new ArrayList<>();
+        jobs = prepareJobs(jobs);
+        jobs.get(0).setJobStatus(JobStatus.QUEUED);
+        jobs.get(1).setJobStatus(JobStatus.QUEUED);
+
+        Mockito.when(jobService.findAllQueuedJobs()).thenReturn(jobs);
+        MvcResult mvcResult =  mockMvc.perform(get("http://localhost:8080/v1/job/?key=unprocessed"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        String contentAsString = mvcResult.getResponse().getContentAsString();
+        List<Job> myObjects = Arrays.asList(objectMapper.readValue(contentAsString, Job[].class));
+        assertTrue(myObjects.get(0).getJobStatus().equals(jobs.get(0).getJobStatus()));
+
+
     }
     public List<Job> prepareJobs(List<Job> jobs){
 
@@ -107,12 +150,4 @@ class JobControllerTest {
         }
     }
 
-    public static String asStringJson(final Object obj) {
-        try {
-            final ObjectMapper mapper = new ObjectMapper();
-            return  mapper.writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

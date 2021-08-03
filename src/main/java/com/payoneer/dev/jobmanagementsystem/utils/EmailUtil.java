@@ -28,20 +28,20 @@ public class EmailUtil {
         // update the status to running in order to martian business need
         log.info("starting Email Job for# " + job);
         job.setJobStatus(JobStatus.RUNNING);
-        emailJobRepository.saveAndFlush(job);
+        EmailJob savedJob = emailJobRepository.saveAndFlush(job);
 
         // this is a prototype and here im trying to simulate :P
         if(LocalDateTime.now().getNano() % 2 == 0){
-            job.setJobStatus(JobStatus.SUCCESS);
-            log.error("SUCCESS Reminder job for# " + job);
+            savedJob.setJobStatus(JobStatus.SUCCESS);
+            log.error("SUCCESS Reminder job for# " + savedJob);
         }else{
-            job.setJobStatus(JobStatus.FAILED);
-            log.error("FAILED Reminder job for# " + job);
+            savedJob.setJobStatus(JobStatus.FAILED);
+            log.error("FAILED Reminder job for# " + savedJob);
         }
 
         // update the date of completion
-        job.setCompletedAt(LocalDateTime.now());
-         return emailJobRepository.saveAndFlush(job);
+        savedJob.setCompletedAt(LocalDateTime.now());
+         return emailJobRepository.saveAndFlush(savedJob);
     }
 
     @Deprecated // this is the right way but here i will not use it

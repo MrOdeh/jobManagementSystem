@@ -2,7 +2,6 @@ package com.payoneer.dev.jobmanagementsystem.domain;
 
 import com.payoneer.dev.jobmanagementsystem.enumeration.JobPriority;
 import lombok.*;
-
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;

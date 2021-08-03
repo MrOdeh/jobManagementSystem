@@ -4,9 +4,7 @@ package com.payoneer.dev.jobmanagementsystem.event;
 import com.payoneer.dev.jobmanagementsystem.domain.EmailJob;
 import com.payoneer.dev.jobmanagementsystem.domain.Job;
 import com.payoneer.dev.jobmanagementsystem.domain.ReminderJob;
-import com.payoneer.dev.jobmanagementsystem.services.EmailJobService;
 import com.payoneer.dev.jobmanagementsystem.services.JobService;
-import com.payoneer.dev.jobmanagementsystem.services.ReminderJobService;
 import com.payoneer.dev.jobmanagementsystem.utils.EmailUtil;
 import com.payoneer.dev.jobmanagementsystem.utils.ReminderUtil;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +15,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 
@@ -42,7 +39,7 @@ public class JobBackgroundManagementEvent {
 
      /* see how amazing strategy = InheritanceType.JOINED which i can easily call get all jobs from job table
      it will retrun all data from both tables and then i can easily deal with them with OOP polymorphism  */
-    //@Scheduled(fixedRate = 2000)
+    @Scheduled(fixedRate = 2000)
     public void batchlookup(){
         if(!enableBackgroundProcessing){ // to avoid batch collusion or handle data that held by another thread
             return;
@@ -62,7 +59,7 @@ public class JobBackgroundManagementEvent {
         setEnableBackgroundProcessing(true);
     }
 
-    @Async // it will use avaialble thread in pool config
+    @Async // it will use available thread in pool config
     public void jobHandler(Job job){ // in case N of possible jobs increased i would like to replace switch case with design pattern approach
         switch (job.getJobType()){
             case "email":
