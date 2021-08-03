@@ -21,7 +21,8 @@ public class QueueHandler {
     private static final String THREAD_MESSAGE = "Thread# %s took Job %s";
 
     @Async // it will use available thread in pool config
-    public void jobHandler(Job job){ // in case N of possible jobs increased i would like to replace switch case with design pattern approach
+    public void jobHandler(Job job){
+
         log.info(String.format(THREAD_MESSAGE, Thread.currentThread().getName(), job));
         switch (job.getJobType()){
             case "email":

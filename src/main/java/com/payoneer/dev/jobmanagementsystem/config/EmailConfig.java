@@ -10,11 +10,10 @@ import org.springframework.mail.javamail.MimeMessagePreparator;
 import javax.mail.internet.MimeMessage;
 import java.io.InputStream;
 
-//
 @Configuration
 public class EmailConfig {
 
-/*    in real world it has to be implemented and then i can use it rather than implementing it like this :P*/
+/*    this is only a mock of implementation real functionality for sending email is not added */
     @Bean
     public JavaMailSender javaMailSender() {
         return new JavaMailSender() {

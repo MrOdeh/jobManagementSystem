@@ -42,19 +42,15 @@ public class EmailJobServiceImpl implements EmailJobService {
     }
 
     @Override
-    public EmailJob save(EmailJob job, boolean schedule) {
+    public EmailJob save(EmailJob job, boolean scheduled) {
         // validate E-mail & execution time
-        if(!validation.isEmailValid(job.getSender()) || !validation.isEmailValid(job.getReceiver())){
-            throw new GenericClientException("invalid email address",HttpStatus.BAD_REQUEST);
+        if(!validation.isEmailValid(job.getSender()) || !validation.isEmailValid(job.getReceiver())
+        || !validation.isDateValid(job.getJobExecutionTime())){
+            throw new GenericClientException("invalid email Parameters",HttpStatus.BAD_REQUEST);
         }
 
-        // if Not immediately then i have to validate the date
-        if (schedule && !validation.isDateValid(job.getJobExecutionTime())) {
-            throw new GenericClientException("Invalid Date",HttpStatus.BAD_REQUEST);
-        }
-
-        // Not immediately, then job must be saved and the background service will handle it according to execution time :)
-        if(!schedule){
+        // Not scheduled, then the job must be saved and the background service will handle it according to the execution time :)
+        if(scheduled){
             return emailJobRepository.save(job);
         }
 

@@ -115,6 +115,7 @@ class EmailJobServiceImplTest {
 
         when(emailJobRepository.save(any())).thenReturn(job);
         when(validation.isEmailValid(anyString())).thenReturn(Boolean.TRUE);
+        when(validation.isDateValid(any(LocalDateTime.class))).thenReturn(Boolean.TRUE);
         EmailJob savedEmail = emailJobService.save(job, false);
         verify(emailJobRepository,times(1)).save(job);
         assertTrue(savedEmail.getJobPriority() == jobPriority);

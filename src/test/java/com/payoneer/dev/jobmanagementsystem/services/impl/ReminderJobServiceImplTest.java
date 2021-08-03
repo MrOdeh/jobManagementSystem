@@ -86,7 +86,8 @@ public class ReminderJobServiceImplTest {
         when(reminderJobRepository.save(any(ReminderJob.class))).thenReturn(reminderJob);
         when(validation.isEmailValid(anyString())).thenReturn(Boolean.TRUE);
         when(validation.isNumberValid(anyString())).thenReturn(Boolean.TRUE);
-        reminderJobService.save(reminderJob, false);
+        when(validation.isDateValid(any(LocalDateTime.class))).thenReturn(Boolean.TRUE);
+        reminderJobService.save(reminderJob, true);
         verify(reminderJobRepository, times(1)).save(any(ReminderJob.class));
         assertTrue(reminderJob != null);
     }

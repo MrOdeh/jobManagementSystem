@@ -19,20 +19,19 @@ import java.time.LocalDateTime;
 public class EmailUtil {
 
     private final EmailJobRepository emailJobRepository;
-    // JUST IN CASE IF WE NEED TO APPLY IT FUTURE I WILL LEAVE HERE.
+    // JUST IN CASE IF WE NEED TO APPLY IT IN FUTURE I WILL LEAVE HERE.
     private final JavaMailSender javaMailSender;
 
     // FAKE
     @Transactional
-/*    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)*/
     public EmailJob sendAndFlush(EmailJob job) {
         // every job starts with Queued status
-        // update the status to running in order to martian business need
+        // update the status to running in order to maintain business need
         log.info("starting Email Job for# " + job);
         job.setJobStatus(JobStatus.RUNNING);
         emailJobRepository.saveAndFlush(job);
 
-        // this is a prototype and here im trying to simulate :P
+        // this is a prototype and here im trying to simulate an Email message
         if(LocalDateTime.now().getNano() % 2 == 0){
             job.setJobStatus(JobStatus.SUCCESS);
             log.error("SUCCESS Reminder job for# " + job);
@@ -46,10 +45,9 @@ public class EmailUtil {
          return emailJobRepository.saveAndFlush(job);
     }
 
-    @Deprecated // this is the right way but here i will not use it
+    // this is the right way but here i will demonstrate my ability to handle email sending
+    @Deprecated
     public EmailJob sendEmail(EmailJob job){
-        // every job starts with Queued status
-        // update the status to running in order to martian business need
         log.info("starting Email Job for# " + job);
         job.setJobStatus(JobStatus.RUNNING);
         emailJobRepository.saveAndFlush(job);

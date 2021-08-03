@@ -42,19 +42,14 @@ public class ReminderJobServiceImpl implements ReminderJobService {
     }
 
     @Override
-    public ReminderJob save(ReminderJob job, boolean schedule) {
+    public ReminderJob save(ReminderJob job, boolean scheduled) {
         // validate E-mail & execution time
-        if(!validation.isNumberValid(job.getMobileNumber())){
-            throw new GenericClientException("invalid Mobile Number", HttpStatus.BAD_REQUEST);
+        if(!validation.isNumberValid(job.getMobileNumber()) || !validation.isDateValid(job.getJobExecutionTime())){
+            throw new GenericClientException("invalid Reminder Parameters", HttpStatus.BAD_REQUEST);
         }
 
-        // if Not immediately then i have to validate the date
-        if (schedule && !validation.isDateValid(job.getJobExecutionTime())) {
-            throw new GenericClientException("Invalid Date",HttpStatus.BAD_REQUEST);
-        }
-
-        // Not immediately, then job must be saved and the background service will handle it according to execution time :)
-        if(!schedule){
+        // scheduled, then job must be saved and the background service will handle it according to execution time :)
+        if(scheduled){
             return reminderJobRepository.save(job);
         }
 
