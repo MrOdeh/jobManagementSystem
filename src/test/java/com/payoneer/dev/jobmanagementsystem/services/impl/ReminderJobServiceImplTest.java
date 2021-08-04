@@ -81,7 +81,7 @@ public class ReminderJobServiceImplTest {
     }
 
     @Test
-    void save(){
+    void save_Scheduled(){
 
         when(reminderJobRepository.save(any(ReminderJob.class))).thenReturn(reminderJob);
         when(validation.isEmailValid(anyString())).thenReturn(Boolean.TRUE);
@@ -89,6 +89,18 @@ public class ReminderJobServiceImplTest {
         when(validation.isDateValid(any(LocalDateTime.class))).thenReturn(Boolean.TRUE);
         reminderJobService.save(reminderJob, true);
         verify(reminderJobRepository, times(1)).save(any(ReminderJob.class));
+        assertTrue(reminderJob != null);
+    }
+
+    @Test
+    void save_NotScheduled(){
+
+        when(validation.isEmailValid(anyString())).thenReturn(Boolean.TRUE);
+        when(validation.isNumberValid(anyString())).thenReturn(Boolean.TRUE);
+        when(validation.isDateValid(any(LocalDateTime.class))).thenReturn(Boolean.TRUE);
+        when(reminderUtil.sendAndFlush(any(ReminderJob.class))).thenReturn(reminderJob);
+        reminderJobService.save(reminderJob, false);
+        verify(reminderUtil, times(1)).sendAndFlush(any(ReminderJob.class));
         assertTrue(reminderJob != null);
     }
 

@@ -41,7 +41,7 @@ class EmailJobServiceImplTest {
     EmailUtil emailUtil;
     @Mock
     Validation validation;
-    @Autowired
+//    @Autowired
     @InjectMocks
     EmailJobServiceImpl emailJobService;
 
@@ -98,13 +98,13 @@ class EmailJobServiceImplTest {
     }
 
     @Test
-    void save() {
+    void save_Scheduled() {
 
         LocalDateTime now = LocalDateTime.now().plusSeconds(5);
         JobPriority jobPriority = JobPriority.MEDIUM;
         String sender = "Mail@payoneer.com";
         String reciver = "Mail@payoneer.com";
-        String body = "stop pretending happy ending :P ";
+        String body = "nice to meet you";
         job = EmailJob.builder()
                 .jobExecutionTime(now)
                 .jobPriority(jobPriority)
@@ -113,15 +113,43 @@ class EmailJobServiceImplTest {
                 .messageBody(body)
                 .build();
 
-        when(emailJobRepository.save(any())).thenReturn(job);
         when(validation.isEmailValid(anyString())).thenReturn(Boolean.TRUE);
         when(validation.isDateValid(any(LocalDateTime.class))).thenReturn(Boolean.TRUE);
-        EmailJob savedEmail = emailJobService.save(job, false);
+        when(emailJobRepository.save(any())).thenReturn(job);
+        EmailJob savedEmail = emailJobService.save(job, true);
         verify(emailJobRepository,times(1)).save(job);
         assertTrue(savedEmail.getJobPriority() == jobPriority);
         assertTrue(sender.equals(((EmailJob)savedEmail).getSender()));
         assertTrue(reciver.equals(((EmailJob)savedEmail).getReceiver()));
         assertTrue(body.equals(((EmailJob)savedEmail).getMessageBody()));
+
+    }
+
+    @Test
+    void save_NotScheduled() {
+
+        LocalDateTime now = LocalDateTime.now().plusSeconds(5);
+        JobPriority jobPriority = JobPriority.MEDIUM;
+        String sender = "Mail@payoneer.com";
+        String reciver = "Mail@payoneer.com";
+        String body = "nice to meet you";
+        job = EmailJob.builder()
+                .jobExecutionTime(now)
+                .jobPriority(jobPriority)
+                .sender(sender)
+                .receiver(reciver)
+                .messageBody(body)
+                .build();
+
+        when(validation.isEmailValid(anyString())).thenReturn(Boolean.TRUE);
+        when(validation.isDateValid(any(LocalDateTime.class))).thenReturn(Boolean.TRUE);
+        when(emailUtil.sendAndFlush(any(EmailJob.class))).thenReturn(job);
+        EmailJob savedEmail = emailJobService.save(job, true);
+        verify(emailJobRepository,times(1)).save(job);
+        assertTrue(job.getJobPriority() == jobPriority);
+        assertTrue(sender.equals(((EmailJob)job).getSender()));
+        assertTrue(reciver.equals(((EmailJob)job).getReceiver()));
+        assertTrue(body.equals(((EmailJob)job).getMessageBody()));
 
     }
 
