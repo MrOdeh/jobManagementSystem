@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/*the main purpose of this class is to generate random Jobs*/
 @Log4j2
 @RequiredArgsConstructor
 @Component

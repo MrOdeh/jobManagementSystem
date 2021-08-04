@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
     <Properties>
-        <property name="logPath" value="/home/devop/Documents/JavaMasterClass/projects/jobManagementSystem" />
+        <property name="logPath" value="/var/tmp" />
         <property name="fileName" value="jobManagement" />
     </Properties>
     <Appenders>
@@ -17,8 +17,7 @@
                 <pattern>%d %p %C{1.} [%t] %m%n</pattern>
             </PatternLayout>
             <Policies>
-                <!-- rollover on startup, daily and when the file reaches
-                    10 MegaBytes -->
+                <!-- rollover on startup, daily and when the file reaches 10 MegaBytes -->
                 <OnStartupTriggeringPolicy />
                 <SizeBasedTriggeringPolicy
                         size="10 MB" />
