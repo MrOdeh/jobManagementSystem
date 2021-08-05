@@ -22,5 +22,4 @@ public interface JobRepository extends JpaRepository<Job, UUID> {
     @Query("SELECT E from Job E where E.jobStatus in :status")
     List<Job> findAllProccessdJobs(@Param("status") List<JobStatus> statusList);
 
-
 }

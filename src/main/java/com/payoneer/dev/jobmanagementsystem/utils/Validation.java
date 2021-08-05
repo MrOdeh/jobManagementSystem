@@ -11,7 +11,7 @@ public class Validation {
 
     private static final String EMAIL_PATTERN = "^(.+)@payoneer.com$"; //immutable safety
 
-    // let us suppose this is a germen phone number rgex but i will make a fake lookup
+    // let us suppose this is a germen phone number regex but i will make a fake lookup
     private static final String MOBILE_PATTERN = "^\\+(?:[0-9] ?){6,14}[0-9]$";
 
     private static final String FAKE_MOBILE_PATTERN = "^[0-9]{7,9}$";
