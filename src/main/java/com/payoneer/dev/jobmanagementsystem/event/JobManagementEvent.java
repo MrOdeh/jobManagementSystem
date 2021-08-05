@@ -19,7 +19,7 @@ import java.util.Comparator;
 @RequiredArgsConstructor
 @Log4j2
 @PropertySource("classpath:config.properties")
-public class JobBackgroundManagementEvent {
+public class JobManagementEvent {
 
     private final JobService jobService;
     private final QueueHandler queueHandler;
