@@ -7,6 +7,7 @@ import com.payoneer.dev.jobmanagementsystem.repositories.ReminderJobRepository;
 import com.payoneer.dev.jobmanagementsystem.services.ReminderJobService;
 import com.payoneer.dev.jobmanagementsystem.utils.ReminderUtil;
 import com.payoneer.dev.jobmanagementsystem.utils.Validation;
+import com.payoneer.dev.jobmanagementsystem.web.mapper.ReminderJobMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ public class ReminderJobServiceImpl implements ReminderJobService {
     private final ReminderJobRepository reminderJobRepository;
     private final Validation validation;
     private final ReminderUtil reminderUtil;
+    private final ReminderJobMapper reminderJobMapper;
 
     @Override
     public ReminderJob findById(String id) {
@@ -44,7 +46,7 @@ public class ReminderJobServiceImpl implements ReminderJobService {
     @Override
     public ReminderJob save(ReminderJob job, boolean scheduled) {
         // validate E-mail & execution time
-        if(!validation.isNumberValid(job.getMobileNumber()) || !validation.isDateValid(job.getJobExecutionTime())){
+        if(!validation.isNumberValid(job.getMobileNumber()) || !validation.isDateValid(job.getExecutionTime())){
             throw new GenericClientException("invalid Reminder Parameters", HttpStatus.BAD_REQUEST);
         }
 
@@ -82,7 +84,7 @@ public class ReminderJobServiceImpl implements ReminderJobService {
                 .forEach(job -> {
                     if(!schedule && validation.isNumberValid(job.getMobileNumber())){
                         reminderUtil.sendAndFlush(job); // immediate execution
-                    }else if(schedule && validation.isNumberValid(job.getMobileNumber()) && validation.isDateValid(job.getJobExecutionTime())){
+                    }else if(schedule && validation.isNumberValid(job.getMobileNumber()) && validation.isDateValid(job.getExecutionTime())){
                         reminderJobRepository.save(job); // scheduled jobs will be handled by event handler
                     }else{
                         job.setJobStatus(JobStatus.FAILED);

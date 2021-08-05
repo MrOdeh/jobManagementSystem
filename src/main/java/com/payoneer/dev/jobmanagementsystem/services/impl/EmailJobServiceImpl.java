@@ -7,6 +7,7 @@ import com.payoneer.dev.jobmanagementsystem.repositories.EmailJobRepository;
 import com.payoneer.dev.jobmanagementsystem.services.EmailJobService;
 import com.payoneer.dev.jobmanagementsystem.utils.EmailUtil;
 import com.payoneer.dev.jobmanagementsystem.utils.Validation;
+import com.payoneer.dev.jobmanagementsystem.web.mapper.EmailJobMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ public class EmailJobServiceImpl implements EmailJobService {
     private final EmailJobRepository emailJobRepository;
     private final Validation validation;
     private final EmailUtil emailUtil;
+    private final EmailJobMapper emailJobMapper;
 
     @Override
     public EmailJob findById(String id) {
@@ -45,7 +47,7 @@ public class EmailJobServiceImpl implements EmailJobService {
     public EmailJob save(EmailJob job, boolean scheduled) {
         // validate E-mail & execution time
         if(!validation.isEmailValid(job.getSender()) || !validation.isEmailValid(job.getReceiver())
-        || !validation.isDateValid(job.getJobExecutionTime())){
+        || !validation.isDateValid(job.getExecutionTime())){
             throw new GenericClientException("invalid email Parameters",HttpStatus.BAD_REQUEST);
         }
 
@@ -85,7 +87,7 @@ public class EmailJobServiceImpl implements EmailJobService {
                     if(!schedule && (validation.isEmailValid(job.getSender()) && validation.isEmailValid(job.getReceiver()))){
                         emailUtil.sendAndFlush(job); // immediate execution
                     }else if(schedule && (validation.isEmailValid(job.getSender()) && validation.isEmailValid(job.getReceiver())
-                            && validation.isDateValid(job.getJobExecutionTime()))){
+                            && validation.isDateValid(job.getExecutionTime()))){
                         emailJobRepository.save(job); // scheduled jobs will be handled by event handler
                     }else{
                         job.setJobStatus(JobStatus.FAILED);

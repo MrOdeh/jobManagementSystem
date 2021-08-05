@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Repository
 public interface JobRepository extends JpaRepository<Job, UUID> {
-    List<Job> findAllByJobStatusAndJobExecutionTimeBetween(JobStatus status, LocalDateTime now, LocalDateTime after);
+    List<Job> findAllByJobStatusAndExecutionTimeBetween(JobStatus status, LocalDateTime now, LocalDateTime after);
 
     List<Job> findAllByJobType(String type);
 

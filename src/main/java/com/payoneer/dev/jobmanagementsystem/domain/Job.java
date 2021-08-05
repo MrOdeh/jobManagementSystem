@@ -42,12 +42,12 @@ public class Job implements Serializable {
 
     @CreationTimestamp // for auditing
     @Setter(AccessLevel.NONE)
-    @Column(name = "creation_date", nullable = false ,updatable = false)
+    @Column(name = "created_at", nullable = false ,updatable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Berlin")
     private Timestamp createdAt;
 
     @UpdateTimestamp // for auditing
-    @Column(name = "last_update_date",nullable = false)
+    @Column(name = "update_at",nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Berlin")
     private Timestamp updatedAt;
 
@@ -58,8 +58,8 @@ public class Job implements Serializable {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Berlin")
-    @Column(name = "job_execution_time")
-    private LocalDateTime jobExecutionTime;
+    @Column(name = "execution_time")
+    private LocalDateTime executionTime;
 
     @Column(name = "completed_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Berlin")
@@ -74,11 +74,11 @@ public class Job implements Serializable {
 
     @Lob
     @Column(name = "notes")
-    private String note;
+    private String notes;
 
     // for all subclasses
     public Job(LocalDateTime jobExecutionTime, JobPriority jobPriority) {
-        this.jobExecutionTime = jobExecutionTime;
+        this.executionTime = jobExecutionTime;
         this.jobPriority = jobPriority;
         this.jobStatus = JobStatus.QUEUED;
     }

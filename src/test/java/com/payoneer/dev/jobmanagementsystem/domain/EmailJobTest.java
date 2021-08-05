@@ -47,14 +47,14 @@ class EmailJobTest {
     @Test
     void getExecutionTime() {
         assertNotNull(job);
-        assertEquals(executionTime, job.getJobExecutionTime());
-        assertTrue(executionTime.toString().equals(job.getJobExecutionTime().toString()));
+        assertEquals(executionTime, job.getExecutionTime());
+        assertTrue(executionTime.toString().equals(job.getExecutionTime().toString()));
     }
 
     @Test
     void getExecutionTimeNowBefore() {
-        assertNotEquals(job.getJobExecutionTime(), null);
-        assertFalse(job.getJobExecutionTime().equals(LocalDateTime.now().minusMinutes(1)));
+        assertNotEquals(job.getExecutionTime(), null);
+        assertFalse(job.getExecutionTime().equals(LocalDateTime.now().minusMinutes(1)));
     }
 
     @Test

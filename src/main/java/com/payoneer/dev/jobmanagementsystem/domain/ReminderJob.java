@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @DiscriminatorValue(value = "reminder")
 public class ReminderJob extends Job {
 
-    @Column(name = "reminder_description")
+    @Column(name = "description")
     private String reminderDescription;
 
     @Column(name = "mobile")
