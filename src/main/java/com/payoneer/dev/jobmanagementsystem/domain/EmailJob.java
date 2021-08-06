@@ -42,8 +42,8 @@ public class EmailJob extends Job {
     private String bccList;
 
     @Builder // CUSTOMIZED BUILDER
-    public EmailJob(LocalDateTime jobExecutionTime, JobPriority jobPriority, String messageBody, String sender, String recipients
-    ,String messageSubject, Boolean isHtml, String attachmentPath, String ccList, String bccList) {
+    public EmailJob(LocalDateTime jobExecutionTime, JobPriority jobPriority, String messageBody, String sender, String recipients,
+                    String messageSubject, Boolean isHtml, String attachmentPath, String ccList, String bccList) {
         super(jobExecutionTime, jobPriority);
         this.messageBody = messageBody;
         this.sender = sender;
