@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /*the main purpose of this class is to generate random Jobs*/
@@ -29,7 +30,7 @@ public class DevBootstrap implements CommandLineRunner {
         log.info("Loading Random Data...");
         ArrayList<Job> jobs = new ArrayList<>();
         jobService.saveAll(createJobs(jobs, 150));
-        log.info("there are 1000 record has been loaded");
+        log.info("there are " + jobs.size() + " record has been loaded.");
         log.info("Data has been loaded on http://localhost:8080/h2-console/");
         log.info("H2 credentials : ");
         log.info("Username: as");
@@ -43,9 +44,8 @@ public class DevBootstrap implements CommandLineRunner {
         for(int index = 0; index < count; index++){
 
             JobPriority jobPriority = index % 2 == 0 ? JobPriority.LOW : index % 3 == 0 ? JobPriority.MEDIUM : JobPriority.HIGH;
-
             job = ReminderJob.builder()
-                    .jobExecutionTime(LocalDateTime.now().plusSeconds(index))
+                    .jobExecutionTime(LocalDateTime.now().plusSeconds(index + 2))
                     .jobPriority(jobPriority)
                     .reminderDescription("Reminder #" + index)
                     .mobileNumber("007983130" + index)
@@ -53,13 +53,17 @@ public class DevBootstrap implements CommandLineRunner {
             jobs.add(job);
 
             job = EmailJob.builder()
-                    .jobExecutionTime(LocalDateTime.now().plusSeconds(index))
+                    .jobExecutionTime(LocalDateTime.now().plusSeconds(index + 2))
                     .jobPriority(jobPriority)
                     .sender(String.format("Mail_%s@payoneer.com", index))
-                    .receiver(String.format("Mail_%s@payoneer.com", index + (index + 1)))
-                    .messageBody("Helllo :)")
+                    .recipients(String.format("Mail_%s@payoneer.com", index + (index + 1)))
+                    .messageBody("Helllo #" + System.currentTimeMillis())
+                    .messageSubject("test")
+                    .ccList(String.join(",", Arrays.asList("cc" + index +"@payoneer.com", "cc" +(index + 5) + "@payoneer.com")))
+                    .bccList(String.join(",", Arrays.asList("bcc" + index +"@payoneer.com", "bcc" +(index + 5) + "@payoneer.com")))
+                    .isHtml(index % 2 == 0 ? Boolean.FALSE : Boolean.TRUE)
+                    .attachmentPath("/Home/Dev/BlaBla")
                     .build();
-
             jobs.add(job);
         }
         return jobs;

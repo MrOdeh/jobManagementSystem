@@ -64,7 +64,7 @@ class JobControllerTest {
                 .jobExecutionTime(now)
                 .messageBody("nothing")
                 .sender("aksjkasj@payoneer.com")
-                .receiver("aksjkasj2@payoneer.com")
+                .recipients("aksjkasj2@payoneer.com")
                 .jobPriority(JobPriority.MEDIUM)
                 .build();
     }
@@ -132,7 +132,7 @@ class JobControllerTest {
                 .jobExecutionTime(now)
                 .messageBody("nothing")
                 .sender("aksjkasj@payoneer.com")
-                .receiver("aksjkasj2@payoneer.com")
+                .recipients("aksjkasj2@payoneer.com")
                 .jobPriority(JobPriority.MEDIUM)
                 .build();
         jobs.add(reminder);

@@ -1,24 +1,17 @@
 package com.payoneer.dev.jobmanagementsystem.services.impl;
 
 import com.payoneer.dev.jobmanagementsystem.domain.EmailJob;
-import com.payoneer.dev.jobmanagementsystem.domain.Job;
-import com.payoneer.dev.jobmanagementsystem.domain.ReminderJob;
 import com.payoneer.dev.jobmanagementsystem.enumeration.JobPriority;
 import com.payoneer.dev.jobmanagementsystem.exception.GenericClientException;
 import com.payoneer.dev.jobmanagementsystem.repositories.EmailJobRepository;
-import com.payoneer.dev.jobmanagementsystem.repositories.ReminderJobRepository;
-import com.payoneer.dev.jobmanagementsystem.services.EmailJobService;
 import com.payoneer.dev.jobmanagementsystem.utils.EmailUtil;
 import com.payoneer.dev.jobmanagementsystem.utils.Validation;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -37,11 +30,13 @@ class EmailJobServiceImplTest {
 
     @Mock
     EmailJobRepository emailJobRepository;
+
     @Mock
     EmailUtil emailUtil;
+
     @Mock
     Validation validation;
-//    @Autowired
+
     @InjectMocks
     EmailJobServiceImpl emailJobService;
 
@@ -87,7 +82,7 @@ class EmailJobServiceImplTest {
                 .jobExecutionTime(now)
                 .jobPriority(jobPriority)
                 .sender(sender)
-                .receiver(reciver)
+                .recipients(reciver)
                 .messageBody(body)
                 .build();
 
@@ -109,7 +104,7 @@ class EmailJobServiceImplTest {
                 .jobExecutionTime(now)
                 .jobPriority(jobPriority)
                 .sender(sender)
-                .receiver(reciver)
+                .recipients(reciver)
                 .messageBody(body)
                 .build();
 
@@ -120,7 +115,7 @@ class EmailJobServiceImplTest {
         verify(emailJobRepository,times(1)).save(job);
         assertTrue(savedEmail.getJobPriority() == jobPriority);
         assertTrue(sender.equals(((EmailJob)savedEmail).getSender()));
-        assertTrue(reciver.equals(((EmailJob)savedEmail).getReceiver()));
+        assertTrue(reciver.equals(((EmailJob)savedEmail).getRecipients()));
         assertTrue(body.equals(((EmailJob)savedEmail).getMessageBody()));
 
     }
@@ -137,7 +132,7 @@ class EmailJobServiceImplTest {
                 .jobExecutionTime(now)
                 .jobPriority(jobPriority)
                 .sender(sender)
-                .receiver(reciver)
+                .recipients(reciver)
                 .messageBody(body)
                 .build();
 
@@ -148,7 +143,7 @@ class EmailJobServiceImplTest {
         verify(emailJobRepository,times(1)).save(job);
         assertTrue(job.getJobPriority() == jobPriority);
         assertTrue(sender.equals(((EmailJob)job).getSender()));
-        assertTrue(reciver.equals(((EmailJob)job).getReceiver()));
+        assertTrue(reciver.equals(((EmailJob)job).getRecipients()));
         assertTrue(body.equals(((EmailJob)job).getMessageBody()));
 
     }
@@ -165,7 +160,7 @@ class EmailJobServiceImplTest {
                 .jobExecutionTime(now)
                 .jobPriority(jobPriority)
                 .sender(sender)
-                .receiver(reciver)
+                .recipients(reciver)
                 .messageBody(body)
                 .build();
 

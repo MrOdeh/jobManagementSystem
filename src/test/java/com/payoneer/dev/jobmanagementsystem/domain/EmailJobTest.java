@@ -20,7 +20,7 @@ class EmailJobTest {
                 .jobExecutionTime(executionTime)
                 .messageBody("nothing")
                 .sender("me")
-                .receiver("you")
+                .recipients("you")
                 .jobPriority(JobPriority.MEDIUM)
                 .build();
     }
@@ -41,7 +41,7 @@ class EmailJobTest {
     @Test
     void getReceiver() {
         assertNotNull(job);
-        assertTrue(job.getReceiver().equals("you"));
+        assertTrue(job.getRecipients().equals("you"));
     }
 
     @Test

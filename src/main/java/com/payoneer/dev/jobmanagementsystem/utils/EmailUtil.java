@@ -52,9 +52,9 @@ public class EmailUtil {
         emailJobRepository.saveAndFlush(job);
 
         SimpleMailMessage msg = new SimpleMailMessage();
-        msg.setTo(job.getReceiver());
+        msg.setTo(job.getRecipients());
 
-        msg.setSubject("Pyonnier");
+        msg.setSubject(job.getMessageSubject());
         msg.setText(job.getMessageBody());
 
         javaMailSender.send(msg);

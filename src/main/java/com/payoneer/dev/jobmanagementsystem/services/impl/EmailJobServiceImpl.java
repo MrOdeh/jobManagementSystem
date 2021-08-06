@@ -46,7 +46,7 @@ public class EmailJobServiceImpl implements EmailJobService {
     @Override
     public EmailJob save(EmailJob job, boolean scheduled) {
         // validate E-mail & execution time
-        if(!validation.isEmailValid(job.getSender()) || !validation.isEmailValid(job.getReceiver())
+        if(!validation.isEmailValid(job.getSender()) || !validation.isEmailValid(job.getRecipients())
         || !validation.isDateValid(job.getExecutionTime())){
             throw new GenericClientException("invalid email Parameters",HttpStatus.BAD_REQUEST);
         }
@@ -84,9 +84,9 @@ public class EmailJobServiceImpl implements EmailJobService {
         jobs.stream()
                 .sorted(Comparator.comparing(val -> val.getJobPriority().getValue()))
                 .forEach(job -> {
-                    if(!schedule && (validation.isEmailValid(job.getSender()) && validation.isEmailValid(job.getReceiver()))){
+                    if(!schedule && (validation.isEmailValid(job.getSender()) && validation.isEmailValid(job.getRecipients()))){
                         emailUtil.sendAndFlush(job); // immediate execution
-                    }else if(schedule && (validation.isEmailValid(job.getSender()) && validation.isEmailValid(job.getReceiver())
+                    }else if(schedule && (validation.isEmailValid(job.getSender()) && validation.isEmailValid(job.getRecipients())
                             && validation.isDateValid(job.getExecutionTime()))){
                         emailJobRepository.save(job); // scheduled jobs will be handled by event handler
                     }else{

@@ -19,7 +19,6 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-// this is the core of this project
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -40,13 +39,13 @@ public class Job implements Serializable {
     @Column(name = "job_id", length = 36)
     private UUID jobId;
 
-    @CreationTimestamp // for auditing
+    @CreationTimestamp
     @Setter(AccessLevel.NONE)
     @Column(name = "created_at", nullable = false ,updatable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Berlin")
     private Timestamp createdAt;
 
-    @UpdateTimestamp // for auditing
+    @UpdateTimestamp
     @Column(name = "update_at",nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Berlin")
     private Timestamp updatedAt;

@@ -29,6 +29,7 @@ public class JobManagementEvent {
 
     @Synchronized // avoid locking issue
     public void setEnableBackgroundProcessing(boolean status){
+        // to avoid batch collusion or handle data that held by another thread
         enableBackgroundProcessing = status;
     }
 
@@ -36,7 +37,6 @@ public class JobManagementEvent {
      it will return all data from both tables (email and reminder) and then I can easily deal with them with OOP polymorphism  */
     @Scheduled(fixedRate = 2000)
     public void batchlookup(){
-        // to avoid batch collusion or handle data that held by another thread
         if(!enableBackgroundProcessing){
             return;
         }

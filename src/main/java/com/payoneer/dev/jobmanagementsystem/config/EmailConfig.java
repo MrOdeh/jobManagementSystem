@@ -18,7 +18,7 @@ import java.util.Properties;
 @Configuration
 public class EmailConfig {
 
-/*    this is only a mock of implementation real functionality for sending email is not added */
+/*    this is only a mock of implementation real functionality for sending email config */
 
     @Value("${spring.mail.host}")
     private String host;
@@ -33,7 +33,10 @@ public class EmailConfig {
     private String password;
 
     @Value("${spring.mail.debug}")
+
     private Boolean debug;
+
+/*   there are another functionality in Spring Mail Service where I can make use, but I prefer to keep things simple*/
 
     @Bean
     public JavaMailSender mailSender() {
@@ -42,54 +45,6 @@ public class EmailConfig {
         javaMailSender.setPort(port);
         javaMailSender.setUsername(username);
         javaMailSender.setPassword(password);
-
         return javaMailSender;
     }
-
-
-    /*    @Bean
-    public JavaMailSender javaMailSender() {
-        return new JavaMailSender() {
-
-            @Override
-            public void send(SimpleMailMessage simpleMailMessage) throws MailException {
-
-            }
-
-            @Override
-            public void send(SimpleMailMessage... simpleMailMessages) throws MailException {
-
-            }
-
-            @Override
-            public MimeMessage createMimeMessage() {
-                return null;
-            }
-
-            @Override
-            public MimeMessage createMimeMessage(InputStream inputStream) throws MailException {
-                return null;
-            }
-
-            @Override
-            public void send(MimeMessage mimeMessage) throws MailException {
-
-            }
-
-            @Override
-            public void send(MimeMessage... mimeMessages) throws MailException {
-
-            }
-
-            @Override
-            public void send(MimeMessagePreparator mimeMessagePreparator) throws MailException {
-
-            }
-
-            @Override
-            public void send(MimeMessagePreparator... mimeMessagePreparators) throws MailException {
-
-            }
-        };
-    }*/
 }
