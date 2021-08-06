@@ -48,9 +48,9 @@ public class JobManagementEvent {
         // then --
         // 3- sort them based on Job Propriety --> this can be straightforward from the query itself but I prefer on-fly implementation
         // 4- execute them on parallel approach
-        jobService.findAllJobsByStatusAndExecutionTime(JobStatus.QUEUED, LocalDateTime.now(), LocalDateTime.now().plusSeconds(2))
+        jobService.findAllJobsByStatusAndExecutionTime(JobStatus.QUEUED, LocalDateTime.now().minusSeconds(2), LocalDateTime.now().plusSeconds(2))
                 .stream()
-                .sorted(Comparator.comparing(val -> val.getJobPriority().getValue()))
+                .sorted(Comparator.comparing(val -> val.getJobPriority().getValue())) // sort by JobPriority
                 .forEach(job -> queueHandler.jobHandler(job));
         setEnableBackgroundProcessing(true);
     }
