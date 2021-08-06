@@ -16,14 +16,14 @@ of the executed job either it changes the state to Successful or Failed.
   Each job is handled that it never effect the system is it fails, only the 
 state is set to failed. HOW HOW HOW 
 * ### Execution
-    At the start of the project, I create 50 Jobs with different 
+    At the start of the project, I create 300 Jobs with different 
 types, and execution times, just to simulate the project work. These jobs output can be viewed in the logs. 
 And Job APIs can be used to fetch them. The user
 still has the ability to create another jobs of type Reminder or 
 Email and in the future other types that he can add. 
 * ### Job addition 
-  the user has the ability to add another job type by: \HOW HOW HOW 
-
+  the system admin has the ability to add another job type by:
+  * ii create a new microservice completely isolated and add the new discriminator a new job type, but it should be mapped to the same job table that works under hibernate joined strategy
 * ### Unit tests
     Unit tests are added for all the services and implementation classes. 
 
