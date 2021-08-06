@@ -5,6 +5,7 @@ import com.payoneer.dev.jobmanagementsystem.web.model.ReminderJobDto;
 import org.mapstruct.Mapper;
 import org.springframework.stereotype.Component;
 
+
 @Component
 @Mapper
 public interface ReminderJobMapper {
