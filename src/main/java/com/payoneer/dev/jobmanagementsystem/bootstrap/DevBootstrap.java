@@ -28,7 +28,7 @@ public class DevBootstrap implements CommandLineRunner {
     public void run(String... args) throws Exception {
         log.info("Loading Random Data...");
         ArrayList<Job> jobs = new ArrayList<>();
-        jobService.saveAll(createJobs(jobs, 100));
+        jobService.saveAll(createJobs(jobs, 150));
         log.info("there are 1000 record has been loaded");
         log.info("Data has been loaded on http://localhost:8080/h2-console/");
         log.info("H2 credentials : ");

@@ -8,7 +8,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -60,6 +59,7 @@ public class EmailUtil {
 
         javaMailSender.send(msg);
         job.setJobStatus(JobStatus.SUCCESS);
+        job.setCompletedAt(LocalDateTime.now());
         return emailJobRepository.saveAndFlush(job);
     }
 
