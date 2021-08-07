@@ -19,8 +19,8 @@ public class ReminderJobEventListener {
 
     @Async("RemindertaskExecutor")
     @EventListener
-    void handleReminderJobEvent(ReminderJobEvent job){
-        log.info(String.format(REMINDER_EVENT_MESSAGE, Thread.currentThread().getName(), job));
-        reminderUtil.sendAndFlush((ReminderJob) job.getEvent());
+    void handleReminderJobEvent(ReminderJobEvent event){
+        log.info(String.format(REMINDER_EVENT_MESSAGE, Thread.currentThread().getName(), event.getEvent()));
+        reminderUtil.sendAndFlush((ReminderJob) event.getEvent());
     }
 }

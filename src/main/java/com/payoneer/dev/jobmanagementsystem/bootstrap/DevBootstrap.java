@@ -4,6 +4,7 @@ import com.payoneer.dev.jobmanagementsystem.domain.EmailJob;
 import com.payoneer.dev.jobmanagementsystem.domain.Job;
 import com.payoneer.dev.jobmanagementsystem.domain.ReminderJob;
 import com.payoneer.dev.jobmanagementsystem.enumeration.JobPriority;
+import com.payoneer.dev.jobmanagementsystem.enumeration.JobStatus;
 import com.payoneer.dev.jobmanagementsystem.services.JobService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

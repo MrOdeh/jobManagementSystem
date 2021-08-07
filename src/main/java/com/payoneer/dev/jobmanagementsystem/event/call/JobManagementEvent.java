@@ -1,4 +1,4 @@
-package com.payoneer.dev.jobmanagementsystem.event.oldstaff;
+package com.payoneer.dev.jobmanagementsystem.event.call;
 
 
 import com.payoneer.dev.jobmanagementsystem.enumeration.JobStatus;

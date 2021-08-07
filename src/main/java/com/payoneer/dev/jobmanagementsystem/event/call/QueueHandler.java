@@ -1,9 +1,8 @@
-package com.payoneer.dev.jobmanagementsystem.event.oldstaff;
+package com.payoneer.dev.jobmanagementsystem.event.call;
 
 import com.payoneer.dev.jobmanagementsystem.domain.EmailJob;
 import com.payoneer.dev.jobmanagementsystem.domain.Job;
 import com.payoneer.dev.jobmanagementsystem.domain.ReminderJob;
-import com.payoneer.dev.jobmanagementsystem.services.JobService;
 import com.payoneer.dev.jobmanagementsystem.utils.EmailUtil;
 import com.payoneer.dev.jobmanagementsystem.utils.ReminderUtil;
 import lombok.RequiredArgsConstructor;
