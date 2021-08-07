@@ -1,4 +1,4 @@
-package com.payoneer.dev.jobmanagementsystem.event;
+package com.payoneer.dev.jobmanagementsystem.event.oldstaff;
 
 
 import com.payoneer.dev.jobmanagementsystem.enumeration.JobStatus;
@@ -8,7 +8,6 @@ import lombok.Synchronized;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -35,7 +34,7 @@ public class JobManagementEvent {
 
      /* InheritanceType.JOINED which I can easily call get all jobs from job table
      it will return all data from both tables (email and reminder) and then I can easily deal with them with OOP polymorphism  */
-    @Scheduled(fixedRate = 2000)
+    //@Scheduled(fixedRate = 2000)
     public void batchlookup(){
         if(!enableBackgroundProcessing){
             return;

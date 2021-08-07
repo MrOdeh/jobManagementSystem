@@ -1,4 +1,4 @@
-package com.payoneer.dev.jobmanagementsystem.event;
+package com.payoneer.dev.jobmanagementsystem.event.oldstaff;
 
 import com.payoneer.dev.jobmanagementsystem.domain.EmailJob;
 import com.payoneer.dev.jobmanagementsystem.domain.Job;

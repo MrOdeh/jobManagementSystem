@@ -25,20 +25,28 @@ public class ReminderUtil {
         // every job starts with Queued status
         // update the status to running in order to maintain business need
         log.info("starting Reminder Job for# " + job);
-        job.setJobStatus(JobStatus.RUNNING);
-        reminderJobRepository.saveAndFlush(job);
-
-        // this is a prototype and here im trying to simulate the Reminder Message
-        if(LocalDateTime.now().getNano() % 2 != 0){
-            job.setJobStatus(JobStatus.SUCCESS);
-            log.info("SUCCESS Reminder job for #" + job);
-        }else{
-            job.setJobStatus(JobStatus.FAILED);
-            log.error("FAILED Reminder job for# " + job);
+        // the main perpouse of this block to avoid recode the job even handling and to avoid updating the status twice
+        if(job.getJobStatus() == JobStatus.QUEUED) {
+            job.setJobStatus(JobStatus.RUNNING);
+            reminderJobRepository.saveAndFlush(job);
         }
-
-        // update the date of completion
-        job.setCompletedAt(LocalDateTime.now());
+        // this is a prototype and here im trying to simulate the Reminder Message
+        try {
+            if (LocalDateTime.now().getNano() % 2 != 0) {
+                job.setJobStatus(JobStatus.SUCCESS);
+                log.info("SUCCESS Reminder job for #" + job);
+            } else {
+                job.setJobStatus(JobStatus.FAILED);
+                log.error("FAILED Reminder job for# " + job);
+            }
+        }catch (Exception ex){
+            // this should be for API call to maintain system flexibility
+            job.setJobStatus(JobStatus.FAILED);
+            job.setNotes("Api Server Issue# " +  ex.getMessage());
+        }finally {
+            // update the date of completion
+            job.setCompletedAt(LocalDateTime.now());
+        }
         return reminderJobRepository.saveAndFlush(job);
 
     }

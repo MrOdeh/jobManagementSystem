@@ -26,40 +26,57 @@ public class EmailUtil {
     public EmailJob sendAndFlush(EmailJob job) {
         // every job starts with Queued status
         // update the status to running in order to maintain business need
-        log.info("starting Email Job for# " + job);
-        job.setJobStatus(JobStatus.RUNNING);
-        emailJobRepository.saveAndFlush(job);
 
-        // this is a prototype and here im trying to simulate an Email message
-        if(LocalDateTime.now().getNano() % 2 == 0){
-            job.setJobStatus(JobStatus.SUCCESS);
-            log.error("SUCCESS Reminder job for# " + job);
-        }else{
-            job.setJobStatus(JobStatus.FAILED);
-            log.error("FAILED Reminder job for# " + job);
+        log.info("starting Email Job for# " + job);
+        // the main perpouse of this block to avoid recode the job even handling and to avoid updating the status twice
+        if(job.getJobStatus() == JobStatus.QUEUED) {
+            job.setJobStatus(JobStatus.RUNNING);
+            emailJobRepository.saveAndFlush(job);
         }
 
-        // update the date of completion
-        job.setCompletedAt(LocalDateTime.now());
+        // this is a prototype and here im trying to simulate an Email message
+        try {
+            if (LocalDateTime.now().getNano() % 2 == 0) {
+                job.setJobStatus(JobStatus.SUCCESS);
+                log.error("SUCCESS Reminder job for# " + job);
+            } else {
+                job.setJobStatus(JobStatus.FAILED);
+                log.error("FAILED Reminder job for# " + job);
+            }
+        }catch (Exception ex){
+            // this should be for API call to maintain system flexibility
+            job.setJobStatus(JobStatus.FAILED);
+            job.setNotes("Api Server Issue# " +  ex.getMessage());
+        }finally {
+            // update the date of completion
+            job.setCompletedAt(LocalDateTime.now());
+        }
          return emailJobRepository.saveAndFlush(job);
     }
 
     // this is the right way but here i will demonstrate my ability to handle email sending
     @Deprecated
     public EmailJob sendEmail(EmailJob job){
-        log.info("starting Email Job for# " + job);
-        job.setJobStatus(JobStatus.RUNNING);
-        emailJobRepository.saveAndFlush(job);
 
-        SimpleMailMessage msg = new SimpleMailMessage();
-        msg.setTo(job.getRecipients());
+        try {
+            log.info("starting Email Job for# " + job);
+            job.setJobStatus(JobStatus.RUNNING);
+            emailJobRepository.saveAndFlush(job);
 
-        msg.setSubject(job.getMessageSubject());
-        msg.setText(job.getMessageBody());
+            SimpleMailMessage msg = new SimpleMailMessage();
+            msg.setTo(job.getRecipients());
 
-        javaMailSender.send(msg);
-        job.setJobStatus(JobStatus.SUCCESS);
-        job.setCompletedAt(LocalDateTime.now());
+            msg.setSubject(job.getMessageSubject());
+            msg.setText(job.getMessageBody());
+
+            javaMailSender.send(msg);
+            job.setJobStatus(JobStatus.SUCCESS);
+        }catch (Exception ex){
+            // update the status
+            job.setJobStatus(JobStatus.RUNNING);
+        }finally {
+            job.setCompletedAt(LocalDateTime.now());
+        }
         return emailJobRepository.saveAndFlush(job);
     }
 
