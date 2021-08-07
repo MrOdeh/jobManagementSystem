@@ -7,11 +7,10 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import java.util.concurrent.Executor;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 @PropertySource("classpath:config.properties")
 @Configuration
@@ -29,8 +28,11 @@ public class AsyncConfig {
     @Value("${thread.maxpoolsize}")
     private Integer maxPoolSize = 2;
 
-    @Value("${thread.threadnameprefix}")
-    private String threadPrefix = "worker";
+    @Value("${thread.emailthreadnameprefix}")
+    private String emailThreadPrefix = "worker";
+
+    @Value("${thread.reminderthreadnameprefix}")
+    private String reminderThreadPrefix = "worker";
 
     @Value("${thread.taskScheduler.poolsize}")
     private Integer taskSchedulerPoolSize = 2;
@@ -43,7 +45,7 @@ public class AsyncConfig {
         threadPoolTaskExecutor.setCorePoolSize(poolSize);
         threadPoolTaskExecutor.setMaxPoolSize(maxPoolSize);
         threadPoolTaskExecutor.setQueueCapacity(queueCapacity);
-        threadPoolTaskExecutor.setThreadNamePrefix(String.valueOf(threadPrefix + "-"));
+        threadPoolTaskExecutor.setThreadNamePrefix(String.valueOf(reminderThreadPrefix + "-"));
         threadPoolTaskExecutor.initialize();
         return threadPoolTaskExecutor;
     }
@@ -54,7 +56,7 @@ public class AsyncConfig {
         threadPoolTaskExecutor.setCorePoolSize(poolSize);
         threadPoolTaskExecutor.setMaxPoolSize(maxPoolSize);
         threadPoolTaskExecutor.setQueueCapacity(queueCapacity);
-        threadPoolTaskExecutor.setThreadNamePrefix(String.valueOf(threadPrefix + "-"));
+        threadPoolTaskExecutor.setThreadNamePrefix(String.valueOf(emailThreadPrefix + "-"));
         threadPoolTaskExecutor.initialize();
         return threadPoolTaskExecutor;
     }
@@ -63,7 +65,11 @@ public class AsyncConfig {
     I is possible to override this behavior by the below config */
     @Bean
     public TaskScheduler taskScheduler() {
-        return new ConcurrentTaskScheduler(new ScheduledThreadPoolExecutor(taskSchedulerPoolSize));
+        ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
+        threadPoolTaskScheduler.setPoolSize(taskSchedulerPoolSize);
+        threadPoolTaskScheduler.setThreadNamePrefix("Scheduler-");
+        threadPoolTaskScheduler.initialize();
+        return threadPoolTaskScheduler;
     }
 
 }

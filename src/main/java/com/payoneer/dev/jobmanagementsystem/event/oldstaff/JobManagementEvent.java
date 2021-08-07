@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 
-/* this is a event handler, any job that postponed or scheduled to be executed later this service will take care of it*/
+@Deprecated
 @Component
 @RequiredArgsConstructor
 @Log4j2
@@ -28,7 +28,6 @@ public class JobManagementEvent {
 
     @Synchronized // avoid locking issue
     public void setEnableBackgroundProcessing(boolean status){
-        // to avoid batch collusion or handle data that held by another thread
         enableBackgroundProcessing = status;
     }
 

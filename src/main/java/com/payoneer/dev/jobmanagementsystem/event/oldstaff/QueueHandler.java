@@ -11,6 +11,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+@Deprecated
 @Component
 @RequiredArgsConstructor
 @Log4j2
@@ -20,20 +21,6 @@ public class QueueHandler {
     private final ReminderUtil reminderUtil;
     private static final String THREAD_MESSAGE = "Thread# %s took Job %s";
 
-
-/*   I have tried to make things sample but in case I have highly scalable, high performance requirements I would do the below  :
-
-    1- rather than creating one taskExecutor - "ThreadPoolTaskExecutor" for all,
-    I would  create taskExecutor for each job type and each one has its own ThreadPoolTaskExecutor
-    2- create Scheduled for each job's type to trigger scheduled jobs
-    3- create job management event for each service
-
-    OR
-
-    1- increase current ThreadPoolTaskExecutor specs as they provide with Config.properties
-    2- in case the number of jobs increased I would replace long switch statement with "Design pattern : 'strategy pattern - polymorphism '"
-
-    */
 
     @Async // it will use available thread in pool config
     public void jobHandler(Job job){
